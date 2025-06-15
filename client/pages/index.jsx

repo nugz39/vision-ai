@@ -1,0 +1,54 @@
+"use client";
+import { useState } from "react";
+
+export default function Home() {
+  const [file, setFile] = useState(null);
+  const [prompt, setPrompt] = useState("");
+  const [status, setStatus] = useState("");
+  const [img, setImg] = useState("");
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!file || !prompt.trim()) return;
+    setStatus("Generating…");
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("prompt", prompt);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload`,
+      { method: "POST", body: fd }
+    );
+    const j = await res.json();
+    setImg(`data:image/png;base64,${j.png_base64 || ""}`);
+    setStatus(res.ok ? "Done ✓" : `Failed (${res.status})`);
+  }
+
+  return (
+    <main style={{ padding: 20, fontFamily: "sans-serif" }}>
+      <h1>Vision AI (beta)</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          value={prompt}
+          onChange={e => setPrompt(e.target.value)}
+          placeholder="Disney portrait of me as a wizard"
+          style={{ width: "100%", padding: 6 }}
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={e => setFile(e.target.files[0])}
+          style={{ marginTop: 10 }}
+        />
+        <button
+          type="submit"
+          disabled={!file || !prompt.trim()}
+          style={{ marginTop: 10, padding: "6px 12px" }}
+        >
+          Upload & Generate
+        </button>
+      </form>
+      {status && <p>{status}</p>}
+      {img && <img src={img} style={{ marginTop: 10, maxWidth: "100%" }} />}
+    </main>
+  );
+}
