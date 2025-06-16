@@ -1,31 +1,30 @@
-# ---------- Base image ----------
+#############################
+# FastAPI back-end container
+#############################
+
 FROM python:3.11-slim
 
-# ---------- System packages ----------
-RUN apt-get update \
- && apt-get install -y --no-install-recommends git \
- && rm -rf /var/lib/apt/lists/*
+# ── system deps ────────────────────────────────────────────────
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends git && \
+    rm -rf /var/lib/apt/lists/*
 
-# ---------- Hugging Face / Transformers writable cache ----------
-ENV HF_HOME=/opt/hf-cache
-ENV TRANSFORMERS_CACHE=${HF_HOME}
-ENV HUGGINGFACE_HUB_CACHE=${HF_HOME}
-RUN mkdir -p ${HF_HOME} \
- && chmod -R 777 ${HF_HOME}
-
-# ---------- Working directory ----------
+# ── workspace ─────────────────────────────────────────────────
 WORKDIR /app
 
-# ---------- Python deps ----------
+# copy requirements first (for better layer caching)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt \
- && pip install --no-cache-dir accelerate==0.29.3
 
-# ---------- Your application code ----------
+# ── python deps ───────────────────────────────────────────────
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# ── code ──────────────────────────────────────────────────────
 COPY app ./app
 
-# ---------- Network ----------
-EXPOSE 8000
+# Hugging Face cache location (writable in HF Spaces)
+ENV HF_HOME=/data/.cache/huggingface
+RUN mkdir -p $HF_HOME
 
-# ---------- Start server ----------
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+EXPOSE 7860
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
