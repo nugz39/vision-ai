@@ -1,11 +1,31 @@
+# ---------- Base image ----------
 FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+# ---------- System packages ----------
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends git \
+ && rm -rf /var/lib/apt/lists/*
 
+# ---------- Hugging Face / Transformers writable cache ----------
+ENV HF_HOME=/opt/hf-cache
+ENV TRANSFORMERS_CACHE=${HF_HOME}
+ENV HUGGINGFACE_HUB_CACHE=${HF_HOME}
+RUN mkdir -p ${HF_HOME} \
+ && chmod -R 777 ${HF_HOME}
+
+# ---------- Working directory ----------
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
+# ---------- Python deps ----------
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt \
+ && pip install --no-cache-dir accelerate==0.29.3
+
+# ---------- Your application code ----------
 COPY app ./app
+
+# ---------- Network ----------
 EXPOSE 8000
-ENTRYPOINT ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# ---------- Start server ----------
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
