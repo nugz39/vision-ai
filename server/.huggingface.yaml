@@ -1,0 +1,9 @@
+# .huggingface.yaml
+title: Vision AI backend
+sdk: docker
+container:
+  build:
+    path: .
+  port: 8000          # <-- matches uvicorn cmd in Dockerfile
+  env:
+    HF_HOME: /opt/hf_cache
