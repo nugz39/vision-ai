@@ -2,25 +2,43 @@
 import { useState } from "react";
 
 export default function Home() {
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [prompt, setPrompt] = useState("");
   const [status, setStatus] = useState("");
   const [img, setImg] = useState("");
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!file || !prompt.trim()) return;
+
     setStatus("Generating…");
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("prompt", prompt);
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload`,
-      { method: "POST", body: fd }
-    );
-    const j = await res.json();
-    setImg(`data:image/png;base64,${j.png_base64 || ""}`);
-    setStatus(res.ok ? "Done ✓" : `Failed (${res.status})`);
+    setImg("");
+    
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("prompt", prompt);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload`,
+        { method: "POST", body: fd }
+      );
+
+      if (!res.ok) {
+        setStatus(`Failed (${res.status})`);
+        return;
+      }
+
+      const j = await res.json();
+      if (j.png_base64) {
+        setImg(`data:image/png;base64,${j.png_base64}`);
+        setStatus("Done ✓");
+      } else {
+        setStatus("Failed (no image returned)");
+      }
+    } catch (error: any) {
+      setStatus(`Error: ${error.message || "Unknown error"}`);
+    }
   }
 
   return (
@@ -36,7 +54,7 @@ export default function Home() {
         <input
           type="file"
           accept="image/*"
-          onChange={e => setFile(e.target.files[0])}
+          onChange={e => setFile(e.target.files?.[0] || null)}
           style={{ marginTop: 10 }}
         />
         <button
@@ -48,7 +66,7 @@ export default function Home() {
         </button>
       </form>
       {status && <p>{status}</p>}
-      {img && <img src={img} style={{ marginTop: 10, maxWidth: "100%" }} />}
+      {img && <img src={img} alt="Generated result" style={{ marginTop: 10, maxWidth: "100%" }} />}
     </main>
   );
 }
