@@ -1,0 +1,13 @@
+# global
+.DS_Store
+.env*
+.vercel
+
+# node/next
+node_modules/
+.next/
+dist/
+
+# python
+__pycache__/
+*.pyc
