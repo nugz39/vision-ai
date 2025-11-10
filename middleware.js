@@ -2,18 +2,17 @@ import { NextResponse } from "next/server";
 
 const PASS = process.env.SITE_PASS || "";
 
-// Match everything; we’ll skip assets/api manually
+// Run on all routes; skip in code for assets/api
 export const config = {
   matcher: ["/:path*"],
 };
 
 export function middleware(req) {
-  // If no password set, do nothing
-  if (!PASS) return NextResponse.next();
+  if (!PASS) return NextResponse.next(); // gate disabled when not set
 
   const { pathname } = req.nextUrl;
 
-  // Skip Next internals, API, and common static assets
+  // Skip Next internals, API routes, and static assets
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
@@ -31,7 +30,7 @@ export function middleware(req) {
     return NextResponse.next();
   }
 
-  // Allow the unlock endpoint POST to go through
+  // Allow the unlock endpoint POST
   if (req.method === "POST" && pathname === "/unlock") {
     return NextResponse.next();
   }
@@ -42,16 +41,26 @@ export function middleware(req) {
 
   // Minimal inline password form (no external assets)
   return new NextResponse(
-    `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
-    <body style="font-family:Arial;padding:40px;max-width:520px;margin:auto">
-      <form method="POST" action="/unlock" style="display:flex;gap:10px;align-items:center">
-        <input type="password" name="p" placeholder="Enter password"
-               style="flex:1;padding:12px;border:1px solid #ccc;border-radius:10px;outline:none"/>
-        <button style="padding:12px 16px;border-radius:10px;background:#9FFF00;border:1px solid #dcdcdc;cursor:pointer">
-          Enter
-        </button>
+    `<!doctype html><html><head>
+      <meta name="viewport" content="width=device-width,initial-scale=1"/>
+      <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
+      <meta http-equiv="Pragma" content="no-cache"/>
+      <title>Protected — Vision AI</title>
+      <style>
+        body{font-family:Arial,sans-serif;padding:40px;max-width:520px;margin:auto}
+        input,button{font-size:16px}
+        input{flex:1;padding:12px;border:1px solid #ccc;border-radius:10px;outline:none}
+        button{padding:12px 16px;border-radius:10px;background:#9FFF00;border:1px solid #dcdcdc;cursor:pointer}
+        form{display:flex;gap:10px;align-items:center}
+        small{opacity:.6;margin-top:12px;display:block}
+      </style>
+    </head>
+    <body>
+      <form method="POST" action="/unlock" autocomplete="off">
+        <input type="password" name="p" placeholder="Enter password" autocomplete="new-password"/>
+        <button>Enter</button>
       </form>
-      <p style="opacity:.6;margin-top:12px;font-size:12px">Protected preview — Vision AI</p>
+      <small>Protected preview — Vision AI</small>
     </body></html>`,
     { status: 401, headers: { "content-type": "text/html" } }
   );
