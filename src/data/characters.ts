@@ -51,3 +51,7 @@ export const ALL_CHARACTERS: Character[] = [...PRIMARY_CHARACTERS, ...MORE_CHARA
 export function getCharacterById(id: string) {
   return ALL_CHARACTERS.find((c) => c.id === id);
 }
+
+
+// Back-compat alias for older pages
+export { ALL_CHARACTERS as characters };
