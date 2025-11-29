@@ -1,126 +1,146 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { NbButton } from "@/components/ui/NbButton";
+
+type Plan = "trial" | "pro" | "studio";
+
+const PLANS: Array<{ id: Plan; name: string; price: string; note: string; paid: boolean }> = [
+  { id: "trial", name: "Free Trial", price: "$0", note: "3 days • cancel anytime", paid: false },
+  { id: "pro", name: "Pro", price: "$29/mo", note: "Best for creators", paid: true },
+  { id: "studio", name: "Studio", price: "$79/mo", note: "Best value for heavy output", paid: true },
+];
+
+function clsx(...xs: Array<string | false | null | undefined>) {
+  return xs.filter(Boolean).join(" ");
+}
+
+function PlanCard({
+  active,
+  title,
+  price,
+  note,
+  onClick,
+  tint,
+}: {
+  active?: boolean;
+  title: string;
+  price: string;
+  note: string;
+  tint?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={clsx("w-full text-left rounded-3xl border p-5 transition-all hover:-translate-y-0.5")}
+      style={{
+        borderColor: active ? "rgba(0,242,255,0.40)" : "rgba(2,6,23,0.10)",
+        background: tint
+          ? "radial-gradient(circle at 25% 25%, rgba(0,242,255,0.12), transparent 55%), radial-gradient(circle at 70% 30%, rgba(203,47,255,0.10), transparent 58%), rgba(255,255,255,0.80)"
+          : "rgba(255,255,255,0.80)",
+        boxShadow:
+          "0 18px 55px rgba(2,6,23,0.10), 0 0 18px rgba(0,242,255,0.10), 0 0 18px rgba(203,47,255,0.08)",
+      }}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-sm font-semibold text-[#020617]">{title}</div>
+          <div className="mt-1 text-sm text-black/55">{note}</div>
+        </div>
+        <div className="text-lg font-semibold text-[#020617]">{price}</div>
+      </div>
+    </button>
+  );
+}
 
 export default function SignupPage() {
-  const [email, setEmail] = useState("");
-  const [pw, setPw] = useState("");
-  const [pw2, setPw2] = useState("");
-  const [err, setErr] = useState<string | null>(null);
+  const sp = useSearchParams();
+  const router = useRouter();
 
-  // Always start empty on mount
-  useEffect(() => {
-    setEmail("");
-    setPw("");
-    setPw2("");
-    setErr(null);
-  }, []);
+  const initial = (sp.get("plan") as Plan) || "trial";
+  const [plan, setPlan] = useState<Plan>(["trial","pro","studio"].includes(initial) ? initial : "trial");
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setErr(null);
+  const planMeta = useMemo(() => PLANS.find(p => p.id === plan)!, [plan]);
+  const showPayment = planMeta.paid;
 
-    if (!email.includes("@")) return setErr("Please enter a valid email.");
-    if (pw.length < 6) return setErr("Password must be at least 6 characters.");
-    if (pw !== pw2) return setErr("Passwords do not match.");
-
-    setErr("Signup is frontend-only right now (backend coming next).");
-  };
+  const ctaText = plan === "trial" ? "Start 3-day trial" : plan === "pro" ? "Start Pro" : "Start Studio";
 
   return (
-    <main className="min-h-screen w-full overflow-x-hidden">
-      <div className="mx-auto max-w-6xl px-4 py-12">
-        <div className="flex justify-center">
+    <main className="mx-auto max-w-6xl px-4 py-12">
+      <div className="text-center">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/55">Signup</div>
+        <div className="mt-2 text-3xl font-semibold tracking-tight text-[#020617]">Create your account</div>
+        <div className="mt-3 text-sm text-black/55">Choose a plan and start generating.</div>
+      </div>
+
+      <div className="mt-10 grid gap-6 lg:grid-cols-12">
+        <div className="lg:col-span-6">
+          <div className="grid gap-4">
+            {PLANS.map((p) => (
+              <PlanCard
+                key={p.id}
+                active={plan === p.id}
+                title={p.name}
+                price={p.price}
+                note={p.note}
+                tint={p.id === "studio"}
+                onClick={() => {
+                  setPlan(p.id);
+                  router.replace(`/signup?plan=${p.id}`);
+                }}
+              />
+            ))}
+            <div className="text-center text-sm text-black/55">
+              <a href="/pricing" className="font-semibold text-black/70 hover:text-[#020617] hover:underline">
+                Change plan →
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:col-span-6">
           <div
-            className="w-full max-w-lg rounded-2xl border p-6"
+            className="rounded-3xl border bg-white/80 p-6 backdrop-blur-md"
             style={{
-              borderColor: "rgba(197,107,251,0.28)",
-              background: "linear-gradient(180deg, rgba(8,0,16,0.72), rgba(10,0,19,0.72))",
-              boxShadow: "0 14px 38px rgba(255,0,255,0.05)",
+              borderColor: "rgba(2,6,23,0.10)",
+              boxShadow: "0 18px 55px rgba(2,6,23,0.10), 0 0 18px rgba(0,242,255,0.10), 0 0 18px rgba(203,47,255,0.08)",
             }}
           >
-            <h1 className="text-2xl font-bold" style={{ color: "#F6F6F6", fontFamily: "Inter, system-ui" }}>
-              Create Your NaughtyBotty Account
-            </h1>
+            <div className="text-lg font-semibold text-[#020617]">Account</div>
 
-            <form onSubmit={onSubmit} className="mt-5 space-y-4">
-              <div>
-                <label className="text-xs font-medium" style={{ color: "#C4B3D9" }}>
-                  Email
-                </label>
-                <input
-                  name="email"
-                  value={email || ""}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 h-11 w-full rounded-xl border bg-black/30 px-3 outline-none"
-                  style={{ borderColor: "rgba(197,107,251,0.30)", color: "#F6F6F6" }}
-                  autoComplete="email"
-                />
-              </div>
+            <div className="mt-5 grid gap-3">
+              <input className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="Email" />
+              <input type="password" className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="Password" />
+              <input type="password" className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="Confirm password" />
+            </div>
 
-              <div>
-                <label className="text-xs font-medium" style={{ color: "#C4B3D9" }}>
-                  Password
-                </label>
-                <input
-                  name="new-password"
-                  type="password"
-                  value={pw || ""}
-                  onChange={(e) => setPw(e.target.value)}
-                  className="mt-1 h-11 w-full rounded-xl border bg-black/30 px-3 outline-none"
-                  style={{ borderColor: "rgba(197,107,251,0.30)", color: "#F6F6F6" }}
-                  autoComplete="new-password"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-medium" style={{ color: "#C4B3D9" }}>
-                  Confirm password
-                </label>
-                <input
-                  name="confirm-password"
-                  type="password"
-                  value={pw2 || ""}
-                  onChange={(e) => setPw2(e.target.value)}
-                  className="mt-1 h-11 w-full rounded-xl border bg-black/30 px-3 outline-none"
-                  style={{ borderColor: "rgba(197,107,251,0.30)", color: "#F6F6F6" }}
-                  autoComplete="new-password"
-                />
-              </div>
-
-              {err && (
-                <div
-                  className="rounded-xl border px-3 py-2 text-sm"
-                  style={{
-                    borderColor: "rgba(197,107,251,0.20)",
-                    background: "rgba(0,0,0,0.18)",
-                    color: "#C4B3D9",
-                  }}
-                >
-                  {err}
+            {showPayment && (
+              <div className="mt-7">
+                <div className="text-lg font-semibold text-[#020617]">Payment</div>
+                <div className="mt-4 grid gap-3">
+                  <input className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="Card number" />
+                  <div className="grid grid-cols-2 gap-3">
+                    <input className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="Expiry" />
+                    <input className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="CVC" />
+                  </div>
                 </div>
-              )}
-
-              <button
-                type="submit"
-                className="h-11 w-full rounded-xl text-sm font-semibold transition duration-200 ease-out hover:opacity-95"
-                style={{
-                  color: "#F6F6F6",
-                  background: "linear-gradient(90deg,#ff3bff,#c56bfb)",
-                  boxShadow: "0 14px 38px rgba(255,0,255,0.12)",
-                }}
-              >
-                Create account
-              </button>
-
-              <div className="text-sm" style={{ color: "#C4B3D9" }}>
-                Already have an account?{" "}
-                <Link href="/login" className="hover:underline" style={{ color: "#F6F6F6" }}>
-                  Login
-                </Link>
               </div>
-            </form>
+            )}
+
+            <div className="mt-7 text-sm text-black/55">
+              {plan === "trial"
+                ? "You will be charged $29/mo after 3 days unless you cancel."
+                : "Cancel anytime."}
+            </div>
+
+            <div className="mt-5">
+              <NbButton variant="primary" size="lg" fullWidth onClick={() => {}}>
+                {ctaText}
+              </NbButton>
+            </div>
           </div>
         </div>
       </div>

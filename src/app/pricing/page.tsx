@@ -1,132 +1,124 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { NbButton } from "@/components/ui/NbButton";
 
-function TierCard({
-  title,
-  topRightStrike,
-  priceMain,
-  subtitle,
-  bullets,
-  ctaHref,
-  ctaLabel,
-  highlight,
+function clsx(...xs: Array<string | false | null | undefined>) {
+  return xs.filter(Boolean).join(" ");
+}
+
+function Card({
+  children,
+  tint,
 }: {
-  title: string;
-  topRightStrike?: string;
-  priceMain: string;
-  subtitle?: string;
-  bullets: string[];
-  ctaHref: string;
-  ctaLabel: string;
-  highlight?: boolean;
+  children: React.ReactNode;
+  tint?: boolean;
 }) {
   return (
     <div
-      className="group relative flex h-full flex-col rounded-2xl border p-6 transition duration-200 ease-out hover:-translate-y-1"
+      className={clsx(
+        "group h-full rounded-3xl border bg-white/80 p-6 backdrop-blur-md transition-all hover:-translate-y-0.5 flex flex-col"
+      )}
       style={{
-        borderColor: "rgba(197,107,251,0.25)",
-        background: "linear-gradient(180deg, rgba(8,0,16,0.72), rgba(10,0,19,0.72))",
-        boxShadow: highlight
-          ? "0 0 28px rgba(255,59,255,0.18), 0 16px 44px rgba(255,0,255,0.05)"
-          : "0 16px 44px rgba(255,0,255,0.05)",
+        borderColor: "rgba(2,6,23,0.10)",
+        background: tint
+          ? "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(255,255,255,0.76)), radial-gradient(circle at 25% 25%, rgba(0,242,255,0.12), transparent 55%), radial-gradient(circle at 70% 30%, rgba(203,47,255,0.10), transparent 58%)"
+          : "rgba(255,255,255,0.80)",
+        boxShadow:
+          "0 18px 55px rgba(2,6,23,0.10), 0 0 20px rgba(0,242,255,0.10), 0 0 20px rgba(203,47,255,0.08)",
       }}
     >
-      {topRightStrike && (
-        <div className="absolute right-5 top-5 text-xs line-through opacity-80" style={{ color: "#C4B3D9" }}>
-          {topRightStrike}
-        </div>
-      )}
-
-      <div className="text-sm font-medium" style={{ color: "#C4B3D9", fontFamily: "Inter, system-ui" }}>
-        {title}
-      </div>
-
-      <div className="mt-2 text-3xl font-bold" style={{ color: "#F6F6F6", fontFamily: "Inter, system-ui" }}>
-        {priceMain}
-      </div>
-
-      {subtitle && (
-        <div className="mt-2 text-sm" style={{ color: "#C4B3D9", fontFamily: "Inter, system-ui" }}>
-          {subtitle}
-        </div>
-      )}
-
-      <ul className="mt-4 space-y-2 text-sm" style={{ fontFamily: "Inter, system-ui" }}>
-        {bullets.map((b) => (
-          <li key={b} className="flex items-start gap-2">
-            <span style={{ color: "#c56bfb" }}>•</span>
-            <span style={{ color: "#C4B3D9" }}>{b}</span>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-auto pt-6">
-        <Link
-          href={ctaHref}
-          className="block h-11 w-full rounded-xl px-4 py-2 text-center text-sm font-semibold transition duration-200 ease-out hover:opacity-95"
-          style={{
-            color: "#F6F6F6",
-            background: "linear-gradient(90deg,#ff3bff,#c56bfb)",
-            boxShadow: "0 14px 38px rgba(255,0,255,0.12)",
-          }}
-        >
-          {ctaLabel}
-        </Link>
-      </div>
+      {children}
     </div>
   );
 }
 
 export default function PricingPage() {
-  const studioFeatures = [
-    "Unlimited concurrent generations",
-    "Exclusive studio-grade styles",
-    "Priority queue / exports",
-    "Early access to new features",
-  ];
+  const router = useRouter();
 
   return (
-    <main className="min-h-screen w-full overflow-x-hidden">
-      <div className="mx-auto max-w-6xl px-4 py-10">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold" style={{ color: "#F6F6F6", fontFamily: "Inter, system-ui" }}>
-            Pricing
-          </h1>
-        </div>
+    <main className="mx-auto max-w-6xl px-4 py-12">
+      <div className="text-center">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/55">Pricing</div>
+        <div className="mt-2 text-3xl font-semibold tracking-tight text-[#020617]">Plans that scale with output</div>
+        <div className="mt-3 text-sm text-black/55">Premium controls with neon pastel finish.</div>
+      </div>
 
-        <div className="grid gap-5 md:grid-cols-3">
-          <TierCard
-            title="Studio Free Trial (3 days)"
-            topRightStrike="$39/mo"
-            priceMain="Free Trial"
-            subtitle="Then $39/mo Studio unless cancelled."
-            bullets={studioFeatures}
-            ctaHref="/signup?plan=trial"
-            ctaLabel="Start 3-day Studio Trial"
-            highlight
-          />
+      <div className="mt-10 grid gap-6 md:grid-cols-3 items-stretch">
+        {/* Trial */}
+        <Card>
+          <div>
+            <div className="text-sm font-semibold text-[#020617]">Free Trial</div>
+            <div className="mt-2 text-3xl font-semibold text-[#020617]">$0</div>
+            <div className="mt-1 text-sm text-black/55">3 days</div>
 
-          <TierCard
-            title="Premium"
-            priceMain="$19/mo"
-            bullets={[
-              "Unlock full-quality generations",
-              "Faster queue priority",
-              "High-priority support",
-            ]}
-            ctaHref="/signup?plan=premium"
-            ctaLabel="Try Premium"
-          />
+            <ul className="mt-6 space-y-2 text-sm text-black/55">
+              <li>• Full Studio access</li>
+              <li>• Credits included</li>
+              <li>• Cancel anytime</li>
+            </ul>
+          </div>
 
-          <TierCard
-            title="Studio"
-            priceMain="$39/mo"
-            bullets={studioFeatures}
-            ctaHref="/signup?plan=studio"
-            ctaLabel="Try Studio"
-          />
-        </div>
+          <div className="mt-auto pt-7">
+            <NbButton variant="primary" size="lg" fullWidth onClick={() => router.push("/signup?plan=trial")}>
+              Start free trial
+            </NbButton>
+          </div>
+        </Card>
+
+        {/* Pro */}
+        <Card>
+          <div>
+            <div className="text-sm font-semibold text-[#020617]">Pro</div>
+            <div className="mt-2 text-3xl font-semibold text-[#020617]">
+              $29<span className="text-base font-semibold text-black/55">/mo</span>
+            </div>
+
+            <ul className="mt-6 space-y-2 text-sm text-black/55">
+              <li>• Higher monthly credits</li>
+              <li>• Faster queues</li>
+              <li>• Priority exports</li>
+            </ul>
+          </div>
+
+          <div className="mt-auto pt-7">
+            <NbButton variant="primary" size="lg" fullWidth onClick={() => router.push("/signup?plan=pro")}>
+              Continue with Pro
+            </NbButton>
+          </div>
+        </Card>
+
+        {/* Studio (light tint) */}
+        <Card tint>
+          <div>
+            <div className="text-sm font-semibold text-[#020617]">Studio</div>
+            <div className="mt-2 text-3xl font-semibold text-[#020617]">
+              $79<span className="text-base font-semibold text-black/55">/mo</span>
+            </div>
+            <div className="mt-1 text-sm text-black/55">Best value for teams & heavy output</div>
+
+            <ul className="mt-6 space-y-2 text-sm text-black/55">
+              <li>• Max credits + priority</li>
+              <li>• Studio quality presets</li>
+              <li>• Advanced control access</li>
+            </ul>
+          </div>
+
+          <div className="mt-auto pt-7">
+            <NbButton variant="primary" size="lg" fullWidth onClick={() => router.push("/signup?plan=studio")}>
+              Upgrade to Studio
+            </NbButton>
+          </div>
+        </Card>
+      </div>
+
+      <div className="mt-10 text-center text-sm text-black/55">
+        Have more questions?{" "}
+        <Link href="/support" className="font-semibold text-black/70 hover:text-[#020617] hover:underline">
+          Visit Support →
+        </Link>
       </div>
     </main>
   );

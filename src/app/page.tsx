@@ -1,245 +1,220 @@
-"use client";
+import Link from "next/link";
+import StudioGradientShell from "@/components/layout/StudioGradientShell";
+import GeneratorPreviewCard from "@/components/ui/GeneratorPreviewCard";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ALL_CHARACTERS, type Character, type CharacterStyle } from "@/data/characters";
-import { CharacterCard } from "@/components/ui/CharacterCard";
+type ModeCard = {
+  id: "image" | "video" | "remix";
+  title: string;
+  description: string;
+  thumb: string;
+  studioHref: string;
+};
 
-type SortMode = "Popular" | "Newest";
+const MODE_CARDS: ModeCard[] = [
+  {
+    id: "image",
+    title: "Image",
+    description: "Generate studio-grade visuals for ads, decks, and socials.",
+    thumb: "/assets/gallery/prompt-01.png",
+    studioHref: "/studio?mode=image&style=neon",
+  },
+  {
+    id: "video",
+    title: "Video",
+    description: "Create motion keyframes and guidance for edits and cuts.",
+    thumb: "/assets/gallery/prompt-02.png",
+    studioHref: "/studio?mode=video&style=cinematic",
+  },
+  {
+    id: "remix",
+    title: "Remix",
+    description: "Re-style and re-grade existing assets instantly.",
+    thumb: "/assets/gallery/prompt-03.png",
+    studioHref: "/studio?mode=remix&style=soft-pastel-grade",
+  },
+];
 
-const STYLES: Array<"All" | CharacterStyle> = ["All", "realistic", "stylised", "anime"];
-const GENDERS: Array<"All" | "female"> = ["All", "female"];
-const TAGS = ["Popular","Soft Neon","Cosmic","Mystery","Velvet","Cyber","Warm","Shadow","Ethereal"];
+type ShowcaseItem = {
+  title: string;
+  caption: string;
+  src: string;
+  href: string;
+  badge: "Image" | "Video" | "Remix";
+};
+
+const SHOWCASE: ShowcaseItem[] = [
+  { title: "Neon Product Frame", caption: "Campaign-ready product photography.", src: "/assets/gallery/aria.jpg", href: "/gallery?mode=image&style=neon", badge: "Image" },
+  { title: "Architectural Minimal", caption: "Clean forms, calm editorial tone.", src: "/assets/gallery/cipher.jpg", href: "/gallery?mode=image&style=minimal", badge: "Image" },
+  { title: "Cinematic Keyframe", caption: "Storyboard-ready shot direction.", src: "/assets/gallery/ember.jpg", href: "/gallery?mode=video&style=cinematic", badge: "Video" },
+  { title: "UI Mockup Look", caption: "Modern UI / product interface shots.", src: "/assets/gallery/luxe.jpg", href: "/gallery?mode=image&style=product", badge: "Image" },
+  { title: "Soft Neon Portrait", caption: "Commercial-grade lighting & grade.", src: "/assets/gallery/nova.jpg", href: "/gallery?mode=image&style=editorial", badge: "Image" },
+  { title: "Cyber Grade Remix", caption: "Same subject, fresher lighting.", src: "/assets/gallery/onyx.jpg", href: "/gallery?mode=remix&style=cyberpunk-neon-grade", badge: "Remix" },
+  { title: "Abstract Neon Form", caption: "Premium abstract motion still.", src: "/assets/gallery/seraph.jpg", href: "/gallery?mode=video&style=abstract-motion", badge: "Video" },
+  { title: "Vintage Film Feel", caption: "Kodak-like warmth and grain.", src: "/assets/gallery/vega.jpg", href: "/gallery?mode=remix&style=film-emulation-kodak-style", badge: "Remix" },
+  { title: "Studio Still", caption: "High-key product lighting.", src: "/assets/gallery/prompt-04.png", href: "/gallery?mode=image&style=product", badge: "Image" },
+];
+
+function OverlayChip({ text }: { text: string }) {
+  return (
+    <span className="inline-flex items-center rounded-full border border-black/5 bg-white px-3 py-1 text-xs font-medium text-slate-800 shadow-sm">
+      {text}
+    </span>
+  );
+}
+
+/** Match Support "Send message" gradient for primary buttons in Home */
+const supportGradientBtn =
+  "relative inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold tracking-[0.01em] text-white " +
+  "bg-gradient-to-r from-[#13DFFF] via-[#C931FD] to-[#842CFE] " +
+  "shadow-[0_12px_30px_rgba(132,44,254,0.22)] " +
+  "transition-transform duration-150 ease-out will-change-transform " +
+  "hover:scale-[1.02] hover:shadow-[0_16px_44px_rgba(19,223,255,0.18)] hover:brightness-[1.03] " +
+  "active:scale-[0.995] active:brightness-[0.95] " +
+  "before:pointer-events-none before:absolute before:inset-[-2px] before:rounded-full before:opacity-0 before:transition-opacity before:duration-150 " +
+  "before:bg-[linear-gradient(90deg,rgba(19,223,255,0.0),rgba(19,223,255,0.12),rgba(201,49,253,0.10),rgba(132,44,254,0.10),rgba(132,44,254,0.0))] " +
+  "hover:before:opacity-100";
 
 export default function Page() {
-  const [search, setSearch] = useState("");
-  const [gender, setGender] = useState<"All" | "female">("All");
-  const [style, setStyle] = useState<"All" | CharacterStyle>("All");
-  const [sort, setSort] = useState<SortMode>("Popular");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [advancedOpen, setAdvancedOpen] = useState(false);
-
-  const [visibleCount, setVisibleCount] = useState(12);
-  const loadMoreAnchorRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => setVisibleCount(12), [search, gender, style, sort, selectedTags.join("|")]);
-
-  const filteredSortedAll = useMemo(() => {
-    const q = search.trim().toLowerCase();
-
-    let list = ALL_CHARACTERS.filter((c) => {
-      if (q && !c.name.toLowerCase().includes(q)) return false;
-      if (gender !== "All" && c.gender !== gender) return false;
-      if (style !== "All" && c.style !== style) return false;
-      if (selectedTags.length && !selectedTags.every((t) => c.tags.includes(t))) return false;
-      return true;
-    });
-
-    if (sort === "Popular") list = [...list].sort((a, b) => b.chats - a.chats);
-    else list = [...list].sort((a, b) => b.createdAt - a.createdAt);
-
-    return list;
-  }, [search, gender, style, sort, selectedTags]);
-
-  const visibleCharacters = useMemo(
-    () => filteredSortedAll.slice(0, visibleCount),
-    [filteredSortedAll, visibleCount]
-  );
-
-  const canLoadMore = visibleCount < filteredSortedAll.length;
-
-  const onLoadMore = () => {
-    const next = Math.min(visibleCount + 12, filteredSortedAll.length);
-    setVisibleCount(next);
-    setTimeout(() => loadMoreAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
-  };
-
-  const clearFilters = () => {
-    setSearch("");
-    setGender("All");
-    setStyle("All");
-    setSort("Popular");
-    setSelectedTags([]);
-    setVisibleCount(12);
-    setAdvancedOpen(false);
-  };
-
   return (
-    <main className="min-h-screen w-full overflow-x-hidden">
-      <div className="mx-auto w-full max-w-6xl px-4 py-10">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold" style={{ fontFamily: "Inter, system-ui", color: "#F6F6F6" }}>
-            Explore Characters
-          </h1>
-          <p className="mt-2 text-sm" style={{ color: "#C4B3D9", fontFamily: "Inter, system-ui" }}>
-            Premium synthetic studio catalogue — search, filter, and load more.
-          </p>
-        </div>
-
-        <div
-          className="rounded-2xl border p-4"
-          style={{
-            borderColor: "rgba(197,107,251,0.28)",
-            background: "linear-gradient(180deg, rgba(8,0,16,0.72), rgba(10,0,19,0.72))",
-            boxShadow: "0 14px 38px rgba(255,0,255,0.05)",
-          }}
-        >
-          <div className="grid gap-3 lg:grid-cols-12">
-            <div className="lg:col-span-5">
-              <label className="text-xs font-medium" style={{ color: "#C4B3D9" }}>Search</label>
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Type a name…"
-                className="mt-1 h-11 w-full rounded-xl border bg-black/30 px-3 outline-none"
-                style={{ borderColor: "rgba(197,107,251,0.30)", color: "#F6F6F6" }}
-              />
+    <StudioGradientShell>
+      <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-14">
+        {/* HERO */}
+        <section className="grid items-center gap-8 lg:grid-cols-2">
+          <div className="mx-auto w-full max-w-xl text-center lg:text-left">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/55">
+              PREMIUM MULTI-MODAL AI STUDIO
             </div>
 
-            <div className="lg:col-span-2">
-              <label className="text-xs font-medium" style={{ color: "#C4B3D9" }}>Gender</label>
-              <select
-                value={gender}
-                onChange={(e) => setGender(e.target.value as any)}
-                className="mt-1 h-11 w-full rounded-xl border bg-black/30 px-3 outline-none"
-                style={{ borderColor: "rgba(197,107,251,0.30)", color: "#F6F6F6" }}
+            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0B1220] sm:text-5xl lg:text-6xl">
+              Build premium
+              <br />
+              visuals in minutes.
+            </h1>
+
+            <p className="mt-4 text-sm leading-relaxed text-black/55 sm:text-base">
+              Vision AI Studio is a clean, fast workflow for images, video keyframes and remixes—built for creators who ship.
+            </p>
+
+            <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
+              <Link href="/studio" className={supportGradientBtn}>
+                Open Studio
+              </Link>
+              <Link
+                href="/pricing"
+                className="inline-flex h-11 items-center justify-center rounded-full border border-black/10 bg-white px-5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 hover:shadow-md"
               >
-                {GENDERS.map((g) => <option key={g} value={g} style={{ color: "black" }}>{g}</option>)}
-              </select>
+                View pricing
+              </Link>
             </div>
 
-            <div className="lg:col-span-2">
-              <label className="text-xs font-medium" style={{ color: "#C4B3D9" }}>Style</label>
-              <select
-                value={style}
-                onChange={(e) => setStyle(e.target.value as any)}
-                className="mt-1 h-11 w-full rounded-xl border bg-black/30 px-3 outline-none"
-                style={{ borderColor: "rgba(197,107,251,0.30)", color: "#F6F6F6" }}
+            <div className="mt-3 text-center text-xs font-semibold text-black/55 sm:text-left">
+              No calls. No meetings. Cancel anytime.
+            </div>
+          </div>
+
+          {/* HERO IMAGE PANEL (same size as before) */}
+          <div className="relative mx-auto h-[340px] w-full max-w-xl overflow-hidden rounded-3xl border border-black/5 bg-white/60 shadow-sm">
+            <img
+              src="/assets/branding/hero-panel.png"
+              alt="Vision AI hero visual"
+              className="h-full w-full object-cover"
+            />
+            {/* keep a *very* soft wash so it still feels on-brand */}
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,rgba(19,223,255,0.08),rgba(201,49,253,0.06),rgba(132,44,254,0.06))]" />
+          </div>
+        </section>
+
+        {/* MODES */}
+        <section className="mt-14">
+          <div className="text-center">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/55">Modes</div>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#0B1220] sm:text-4xl">
+              Choose your workflow
+            </h2>
+          </div>
+
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
+            {MODE_CARDS.map((m) => (
+              <div
+                key={m.id}
+                className="flex h-full min-h-[420px] flex-col overflow-hidden rounded-3xl border border-black/5 bg-white/75 shadow-sm"
               >
-                {STYLES.map((s) => <option key={s} value={s} style={{ color: "black" }}>{s}</option>)}
-              </select>
-            </div>
+                <div className="p-6">
+                  <div className="text-xl font-semibold text-[#0B1220]">{m.title}</div>
+                  <div className="mt-2 text-sm leading-relaxed text-black/55">{m.description}</div>
 
-            <div className="lg:col-span-3">
-              <label className="text-xs font-medium" style={{ color: "#C4B3D9" }}>Sort</label>
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value as any)}
-                className="mt-1 h-11 w-full rounded-xl border bg-black/30 px-3 outline-none"
-                style={{ borderColor: "rgba(197,107,251,0.30)", color: "#F6F6F6" }}
-              >
-                <option value="Popular" style={{ color: "black" }}>Popular</option>
-                <option value="Newest" style={{ color: "black" }}>Newest</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="mt-3 flex flex-wrap gap-2">
-            {TAGS.map((t) => {
-              const active = selectedTags.includes(t);
-              return (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setSelectedTags((prev) => active ? prev.filter(x => x !== t) : [...prev, t])}
-                  className="rounded-full px-3 py-1 text-[11px] font-medium transition duration-200 ease-out"
-                  style={{
-                    color: active ? "#F6F6F6" : "#C4B3D9",
-                    background: active ? "linear-gradient(90deg,#ff3bff,#c56bfb)" : "rgba(0,0,0,0.28)",
-                    border: "1px solid rgba(197,107,251,0.30)",
-                  }}
-                >
-                  {t}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="h-11 rounded-full px-4 text-sm font-semibold transition duration-200 ease-out"
-              style={{
-                color: "#F6F6F6",
-                background: "linear-gradient(90deg,#ff3bff,#c56bfb)",
-                boxShadow: "0 14px 38px rgba(255,0,255,0.12)",
-              }}
-            >
-              Clear Filters
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setAdvancedOpen((v) => !v)}
-              className="h-11 rounded-full border px-4 text-sm font-semibold transition duration-200 ease-out hover:opacity-90"
-              style={{ borderColor: "rgba(197,107,251,0.35)", color: "#F6F6F6" }}
-            >
-              Advanced
-            </button>
-          </div>
-
-          <div
-            className="overflow-hidden transition-[max-height,opacity] duration-200 ease-out"
-            style={{ maxHeight: advancedOpen ? 220 : 0, opacity: advancedOpen ? 1 : 0 }}
-          >
-            <div className="mt-4 rounded-2xl border p-4"
-              style={{ borderColor: "rgba(197,107,251,0.20)", background: "rgba(0,0,0,0.18)" }}
-            >
-              <div className="text-sm font-bold" style={{ color: "#F6F6F6", fontFamily: "Inter, system-ui" }}>
-                Advanced filters (placeholder)
-              </div>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {["Spice level", "Vibe", "Mood", "Energy"].map((x) => (
-                  <button
-                    key={x}
-                    type="button"
-                    className="rounded-full px-3 py-1 text-[11px] font-medium"
-                    style={{
-                      color: "#C4B3D9",
-                      background: "rgba(0,0,0,0.28)",
-                      border: "1px solid rgba(197,107,251,0.22)",
-                    }}
-                  >
-                    {x} (soon)
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Center grid + stable sizing */}
-        <div className="mt-6 flex justify-center">
-          <div className="w-full max-w-6xl">
-            <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
-              {visibleCharacters.map((c: Character) => (
-                <div key={c.id} className="min-w-0">
-                  <CharacterCard character={c} />
+                  <div className="mt-5 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
+                    <div className="aspect-[16/10] w-full bg-black/[0.02]">
+                      <img src={m.thumb} alt={`${m.title} thumbnail`} className="h-full w-full object-cover" />
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
+
+                <div className="mt-auto p-6 pt-0">
+                  <div className="flex justify-center">
+                    <Link href={m.studioHref} className={`${supportGradientBtn} w-full`}>
+                      Open in Studio
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+        </section>
 
-        <div ref={loadMoreAnchorRef} />
+        {/* GENERATOR PREVIEW */}
+        <section className="mt-14">
+          <GeneratorPreviewCard className="mx-auto max-w-6xl" />
+        </section>
 
-        <div className="mt-6 flex justify-center">
-          <button
-            type="button"
-            onClick={onLoadMore}
-            disabled={!canLoadMore}
-            className="h-11 rounded-full px-6 text-sm font-semibold transition duration-200 ease-out disabled:cursor-not-allowed"
-            style={{
-              color: "#F6F6F6",
-              background: "linear-gradient(90deg,#ff3bff,#c56bfb)",
-              boxShadow: "0 14px 38px rgba(255,0,255,0.12)",
-              opacity: canLoadMore ? 1 : 0.55,
-            }}
-          >
-            {canLoadMore ? "Load More" : "No more characters yet"}
-          </button>
-        </div>
-      </div>
-    </main>
+        {/* SHOWCASE */}
+        <section className="mt-14">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/55">Generator showcase</div>
+              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#0B1220] sm:text-4xl">
+                Curated outputs across modes
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-black/55 sm:text-base">
+                Explore a curated set of image, video, and remix outputs from Vision AI.
+              </p>
+            </div>
+
+            <Link href="/gallery?mode=image&style=neon" className="hidden text-sm font-semibold text-slate-800 hover:underline sm:inline">
+              See more in Gallery →
+            </Link>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {SHOWCASE.slice(0, 9).map((s, idx) => (
+              <Link
+                key={`${s.title}-${idx}`}
+                href={s.href}
+                className="group relative overflow-hidden rounded-2xl border border-black/5 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <div className="absolute left-3 top-3 z-10">
+                  <OverlayChip text={s.badge} />
+                </div>
+
+                <div className="aspect-[4/5] w-full overflow-hidden bg-black/[0.02]">
+                  <img src={s.src} alt={s.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
+                </div>
+
+                <div className="px-4 pb-4 pt-3">
+                  <div className="text-sm font-semibold text-[#0B1220]">{s.title}</div>
+                  <div className="mt-1 text-[12px] text-black/55">{s.caption}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-8 flex justify-center sm:hidden">
+            <Link href="/gallery?mode=image&style=neon" className="text-sm font-semibold text-slate-800 hover:underline">
+              See more in Gallery →
+            </Link>
+          </div>
+        </section>
+      </main>
+    </StudioGradientShell>
   );
 }

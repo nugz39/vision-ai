@@ -2,119 +2,131 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { NB_BRAND_LOGO_SRC } from "@/lib/branding";
-import { useAuth } from "@/hooks/useAuth";
+import { NbButton } from "@/components/ui/NbButton";
 
-function NavLink({ href, label }: { href: string; label: string }) {
+type NavItem = { href: string; label: string };
+
+const NAV: NavItem[] = [
+  { href: "/", label: "VISION AI" },
+  { href: "/studio", label: "Studio" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/gallery", label: "Gallery" },
+  { href: "/support", label: "Support" },
+];
+
+function clsx(...xs: Array<string | false | null | undefined>) {
+  return xs.filter(Boolean).join(" ");
+}
+
+function NavLink({ href, label }: NavItem) {
   const pathname = usePathname();
   const active = pathname === href;
 
   return (
     <Link
       href={href}
-      className="relative px-3 py-2 text-sm transition duration-200 ease-out hover:opacity-90"
-      style={{ color: "#F6F6F6", fontFamily: "Inter, system-ui" }}
+      className={clsx(
+        "relative rounded-full px-3 py-2 text-[12px] font-semibold transition-colors",
+        active ? "text-[#020617]" : "text-black/55 hover:text-[#020617]"
+      )}
     >
       {label}
+      {/* Active underline only (no filled color box) */}
       <span
-        className="absolute left-3 right-3 -bottom-1 h-[2px] rounded-full transition-opacity"
+        aria-hidden="true"
+        className={clsx(
+          "pointer-events-none absolute inset-x-3 -bottom-1 h-px rounded-full transition-opacity",
+          active ? "opacity-100" : "opacity-0"
+        )}
         style={{
-          background: "linear-gradient(90deg,#ff3bff,#c56bfb)",
-          opacity: active ? 1 : 0,
+          background:
+            "linear-gradient(120deg,rgba(0,242,255,0.9),rgba(203,47,255,0.9),rgba(123,44,255,0.9))",
         }}
       />
     </Link>
   );
 }
 
-export function Navbar() {
+function NavbarImpl() {
   const router = useRouter();
-  const { isLoggedIn, logout } = useAuth();
+  const [open, setOpen] = useState(false);
 
-  const onLogout = () => {
-    logout();
-    router.push("/");
-    router.refresh();
-  };
+  // Per your request: top-right CTA always "Free trial" → /pricing, keep same green→cyan background
+  const cta = { label: "Free trial", href: "/pricing" };
 
   return (
     <header
-      className="sticky top-0 z-50 w-full border-b backdrop-blur"
-      style={{
-        borderColor: "rgba(197,107,251,0.18)",
-        background: "rgba(10,0,19,0.72)",
-      }}
+      className="sticky top-0 z-30 border-b bg-white/70 backdrop-blur-md"
+      style={{ borderColor: "rgba(2,6,23,0.10)" }}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-3">
-          <div
-            className="h-10 w-10 overflow-hidden rounded-full border"
-            style={{
-              borderColor: "rgba(197,107,251,0.35)",
-              boxShadow: "0 14px 38px rgba(255,0,255,0.05)",
-              background: "rgba(0,0,0,0.25)",
-            }}
+      <div className="mx-auto max-w-6xl px-4 py-3">
+        <div className="flex items-center justify-between gap-3">
+          {/* Left: logo */}
+          <button
+            type="button"
+            onClick={() => router.push("/")}
+            aria-label="Vision AI home"
+            className="flex items-center"
           >
-            <img src={NB_BRAND_LOGO_SRC} alt="NaughtyBotty" className="h-full w-full object-cover" />
-          </div>
+            <img src={NB_BRAND_LOGO_SRC} alt="Vision AI" className="h-10 w-auto" />
+          </button>
 
-          <div className="leading-tight">
-            <div className="text-sm font-bold" style={{ color: "#F6F6F6", fontFamily: "Inter, system-ui" }}>
-              NaughtyBotty
+          {/* Right: wordmark next to Studio + nav + CTA */}
+          <div className="flex items-center gap-1">
+            <div className="hidden items-center gap-1 md:flex">
+              {NAV.map((n) => (
+                <NavLink key={n.href} {...n} />
+              ))}
+              <div className="ml-2">
+                <NbButton variant="studio" size="md" onClick={() => router.push(cta.href)}>
+                  {cta.label}
+                </NbButton>
+              </div>
             </div>
-            <div className="text-[11px]" style={{ color: "rgba(196,179,217,1)", fontFamily: "Inter, system-ui" }}>
-              Synthetic Studio
+
+            {/* Mobile */}
+            <div className="flex items-center gap-2 md:hidden">
+              <NbButton variant="studio" size="sm" onClick={() => router.push(cta.href)}>
+                {cta.label}
+              </NbButton>
+              <button
+                type="button"
+                onClick={() => setOpen((v) => !v)}
+                className="rounded-full border bg-white/80 px-3 py-2 text-xs font-semibold text-black/70"
+                style={{ borderColor: "rgba(2,6,23,0.12)" }}
+              >
+                Menu
+              </button>
             </div>
           </div>
-        </Link>
-
-        <nav className="hidden items-center gap-1 sm:flex">
-          <NavLink href="/" label="Explore" />
-          <NavLink href="/pricing" label="Pricing" />
-          <NavLink href="/studio" label="Studio" />
-        </nav>
-
-        <div className="flex items-center gap-2">
-          {!isLoggedIn ? (
-            <Link
-              href="/login"
-              className="rounded-full border px-4 py-2 text-sm transition duration-200 ease-out hover:opacity-90"
-              style={{
-                borderColor: "rgba(197,107,251,0.35)",
-                color: "#F6F6F6",
-                background: "transparent",
-              }}
-            >
-              Login
-            </Link>
-          ) : (
-            <button
-              type="button"
-              onClick={onLogout}
-              className="rounded-full border px-4 py-2 text-sm transition duration-200 ease-out hover:opacity-90"
-              style={{
-                borderColor: "rgba(197,107,251,0.35)",
-                color: "#F6F6F6",
-                background: "transparent",
-              }}
-            >
-              Logout
-            </button>
-          )}
-
-          <Link
-            href="/signup"
-            className="rounded-full px-4 py-2 text-sm font-semibold transition duration-200 ease-out"
-            style={{
-              color: "#F6F6F6",
-              background: "linear-gradient(90deg,#ff3bff,#c56bfb)",
-              boxShadow: "0 14px 38px rgba(255,0,255,0.15)",
-            }}
-          >
-            Join Free
-          </Link>
         </div>
+
+        {open && (
+          <div
+            className="mt-3 rounded-2xl border bg-white/80 p-2 backdrop-blur-md md:hidden"
+            style={{ borderColor: "rgba(2,6,23,0.10)" }}
+          >
+            {NAV.map((n) => (
+              <Link
+                key={n.href}
+                href={n.href}
+                onClick={() => setOpen(false)}
+                className="block rounded-xl px-3 py-2 text-sm font-semibold text-[#020617] hover:bg-black/[0.04]"
+              >
+                {n.label}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </header>
   );
 }
+
+export default function Navbar() {
+  return <NavbarImpl />;
+}
+
+export { NavbarImpl as Navbar };
