@@ -52,7 +52,7 @@ export type GalleryItem = {
   id: string;
   mode: GalleryMode;
   style: AnyStyle;
-  src: string; // /gallery/<mode>/<styleSlug>/<NN>.jpg
+  src: string; // /gallery/<mode>/<styleSlug>/<NN>.png
   prompt: string;
   title: string;
   caption: string;
@@ -124,7 +124,7 @@ export function getItemsFor(mode: GalleryMode, style: AnyStyle): GalleryItem[] {
       mode,
       style,
       seed,
-      src: `/gallery/${mode}/${styleSlug}/${nn}.jpg`,
+      src: `/gallery/${mode}/${styleSlug}/${nn}.png`,
       title: `${modeLabel(mode)} • ${String(style)} • ${nn}`,
       caption: captionFor(mode, style),
       prompt: promptFor(mode, style, i),

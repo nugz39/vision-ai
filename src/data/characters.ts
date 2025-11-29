@@ -23,14 +23,14 @@ const ts = (d: string) => new Date(d).getTime();
 
 // ✅ PRIMARY 8 — exact order/info
 export const PRIMARY_CHARACTERS: Character[] = [
-  { id:"nova",   name:"Nova",   style:"realistic", gender:"female", category:"Popular",   chats: 9100000,  createdAt: ts("2025-11-20"), image:"/assets/gallery/nova.jpg",   tags:["Popular","realistic","female","Neon Studio"], bio:"realistic • female" },
-  { id:"luxe",   name:"Luxe",   style:"stylised",  gender:"female", category:"Soft Neon", chats: 5100000,  createdAt: ts("2025-11-18"), image:"/assets/gallery/luxe.jpg",   tags:["Soft Neon","stylised","female","Glamour"],    bio:"stylised • female" },
-  { id:"cipher", name:"Cipher", style:"anime",     gender:"female", category:"Mystery",   chats: 3200000,  createdAt: ts("2025-11-16"), image:"/assets/gallery/cipher.jpg", tags:["Mystery","anime","female","Magic"],          bio:"anime • female" },
-  { id:"aria",   name:"Aria",   style:"stylised",  gender:"female", category:"Popular",   chats:10400000,  createdAt: ts("2025-11-22"), image:"/assets/gallery/aria.jpg",   tags:["Popular","stylised","female","Warm Glow"],    bio:"stylised • female" },
-  { id:"vega",   name:"Vega",   style:"realistic", gender:"female", category:"Cosmic",    chats: 2700000,  createdAt: ts("2025-11-14"), image:"/assets/gallery/vega.jpg",   tags:["Cosmic","realistic","female","Celestial"] ,  bio:"realistic • female" },
-  { id:"ember",  name:"Ember",  style:"stylised",  gender:"female", category:"Warm",      chats: 4100000,  createdAt: ts("2025-11-19"), image:"/assets/gallery/ember.jpg",  tags:["Warm","stylised","female","Cyber Glam"],      bio:"stylised • female" },
-  { id:"onyx",   name:"Onyx",   style:"realistic", gender:"female", category:"Shadow",    chats: 1900000,  createdAt: ts("2025-11-12"), image:"/assets/gallery/onyx.jpg",   tags:["Shadow","realistic","female","Dark"],         bio:"realistic • female" },
-  { id:"seraph", name:"Seraph", style:"anime",     gender:"female", category:"Ethereal",  chats: 6200000,  createdAt: ts("2025-11-21"), image:"/assets/gallery/seraph.jpg", tags:["Ethereal","anime","female","Soft Pink"],      bio:"anime • female" },
+  { id:"nova",   name:"Nova",   style:"realistic", gender:"female", category:"Popular",   chats: 9100000,  createdAt: ts("2025-11-20"), image:"/assets/gallery/prompt-04.png",   tags:["Popular","realistic","female","Neon Studio"], bio:"realistic • female" },
+  { id:"luxe",   name:"Luxe",   style:"stylised",  gender:"female", category:"Soft Neon", chats: 5100000,  createdAt: ts("2025-11-18"), image:"/assets/gallery/prompt-05.png",   tags:["Soft Neon","stylised","female","Glamour"],    bio:"stylised • female" },
+  { id:"cipher", name:"Cipher", style:"anime",     gender:"female", category:"Mystery",   chats: 3200000,  createdAt: ts("2025-11-16"), image:"/assets/gallery/prompt-06.png", tags:["Mystery","anime","female","Magic"],          bio:"anime • female" },
+  { id:"aria",   name:"Aria",   style:"stylised",  gender:"female", category:"Popular",   chats:10400000,  createdAt: ts("2025-11-22"), image:"/assets/gallery/prompt-07.png",   tags:["Popular","stylised","female","Warm Glow"],    bio:"stylised • female" },
+  { id:"vega",   name:"Vega",   style:"realistic", gender:"female", category:"Cosmic",    chats: 2700000,  createdAt: ts("2025-11-14"), image:"/assets/gallery/prompt-08.png",   tags:["Cosmic","realistic","female","Celestial"] ,  bio:"realistic • female" },
+  { id:"ember",  name:"Ember",  style:"stylised",  gender:"female", category:"Warm",      chats: 4100000,  createdAt: ts("2025-11-19"), image:"/assets/gallery/prompt-09.png",  tags:["Warm","stylised","female","Cyber Glam"],      bio:"stylised • female" },
+  { id:"onyx",   name:"Onyx",   style:"realistic", gender:"female", category:"Shadow",    chats: 1900000,  createdAt: ts("2025-11-12"), image:"/assets/gallery/prompt-10.png",   tags:["Shadow","realistic","female","Dark"],         bio:"realistic • female" },
+  { id:"seraph", name:"Seraph", style:"anime",     gender:"female", category:"Ethereal",  chats: 6200000,  createdAt: ts("2025-11-21"), image:"/assets/gallery/prompt-11.png", tags:["Ethereal","anime","female","Soft Pink"],      bio:"anime • female" },
 ];
 
 // ✅ MORE CHARACTERS (Load More section) — exact order

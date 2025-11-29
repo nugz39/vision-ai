@@ -43,14 +43,14 @@ type ShowcaseItem = {
 };
 
 const SHOWCASE: ShowcaseItem[] = [
-  { title: "Neon Product Frame", caption: "Campaign-ready product photography.", src: "/assets/gallery/aria.jpg", href: "/gallery?mode=image&style=neon", badge: "Image" },
-  { title: "Architectural Minimal", caption: "Clean forms, calm editorial tone.", src: "/assets/gallery/cipher.jpg", href: "/gallery?mode=image&style=minimal", badge: "Image" },
-  { title: "Cinematic Keyframe", caption: "Storyboard-ready shot direction.", src: "/assets/gallery/ember.jpg", href: "/gallery?mode=video&style=cinematic", badge: "Video" },
-  { title: "UI Mockup Look", caption: "Modern UI / product interface shots.", src: "/assets/gallery/luxe.jpg", href: "/gallery?mode=image&style=product", badge: "Image" },
-  { title: "Soft Neon Portrait", caption: "Commercial-grade lighting & grade.", src: "/assets/gallery/nova.jpg", href: "/gallery?mode=image&style=editorial", badge: "Image" },
-  { title: "Cyber Grade Remix", caption: "Same subject, fresher lighting.", src: "/assets/gallery/onyx.jpg", href: "/gallery?mode=remix&style=cyberpunk-neon-grade", badge: "Remix" },
-  { title: "Abstract Neon Form", caption: "Premium abstract motion still.", src: "/assets/gallery/seraph.jpg", href: "/gallery?mode=video&style=abstract-motion", badge: "Video" },
-  { title: "Vintage Film Feel", caption: "Kodak-like warmth and grain.", src: "/assets/gallery/vega.jpg", href: "/gallery?mode=remix&style=film-emulation-kodak-style", badge: "Remix" },
+  { title: "Neon Product Frame", caption: "Campaign-ready product photography.", src: "/assets/gallery/prompt-07.png", href: "/gallery?mode=image&style=neon", badge: "Image" },
+  { title: "Architectural Minimal", caption: "Clean forms, calm editorial tone.", src: "/assets/gallery/prompt-06.png", href: "/gallery?mode=image&style=minimal", badge: "Image" },
+  { title: "Cinematic Keyframe", caption: "Storyboard-ready shot direction.", src: "/assets/gallery/prompt-09.png", href: "/gallery?mode=video&style=cinematic", badge: "Video" },
+  { title: "UI Mockup Look", caption: "Modern UI / product interface shots.", src: "/assets/gallery/prompt-05.png", href: "/gallery?mode=image&style=product", badge: "Image" },
+  { title: "Soft Neon Portrait", caption: "Commercial-grade lighting & grade.", src: "/assets/gallery/prompt-04.png", href: "/gallery?mode=image&style=editorial", badge: "Image" },
+  { title: "Cyber Grade Remix", caption: "Same subject, fresher lighting.", src: "/assets/gallery/prompt-10.png", href: "/gallery?mode=remix&style=cyberpunk-neon-grade", badge: "Remix" },
+  { title: "Abstract Neon Form", caption: "Premium abstract motion still.", src: "/assets/gallery/prompt-11.png", href: "/gallery?mode=video&style=abstract-motion", badge: "Video" },
+  { title: "Vintage Film Feel", caption: "Kodak-like warmth and grain.", src: "/assets/gallery/prompt-08.png", href: "/gallery?mode=remix&style=film-emulation-kodak-style", badge: "Remix" },
   { title: "Studio Still", caption: "High-key product lighting.", src: "/assets/gallery/prompt-04.png", href: "/gallery?mode=image&style=product", badge: "Image" },
 ];
 
