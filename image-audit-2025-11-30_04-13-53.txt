@@ -1,0 +1,109 @@
+VISION AI IMAGE AUDIT
+Root: /c/Users/josht/Desktop/vision-ai
+Generated: 2025-11-30_04-13-53
+
+==============================
+1) IMAGE FILES FOUND (actual files)
+==============================
+
+-- public/ (served assets) --
+
+-- src/ (imported assets, icons, etc) --
+
+==============================
+2) RAW REFERENCES (file:line -> match)
+   (Anywhere your code references .png/.jpg/.svg/etc)
+==============================
+
+src/app/api/generate-preview/route.ts:58:        mode === "video" ? "/assets/gallery/prompt-02.png" : "/assets/gallery/prompt-03.png";
+src/app/characters/nova/page.tsx:41:  const heroPortrait = "/assets/characters/nova/portrait.png";
+src/app/characters/nova/page.tsx:49:        src: `/assets/characters/nova/${idx}.png`,
+src/app/characters/nova/page.tsx:91:                    d.textContent = "Nova portrait placeholder (add portrait.png)";
+src/app/characters/nova/page.tsx:232:                        d.textContent = "Placeholder (add 01.png–12.png)";
+src/app/page.tsx:18:    thumb: "/assets/gallery/prompt-01.png",
+src/app/page.tsx:25:    thumb: "/assets/gallery/prompt-02.png",
+src/app/page.tsx:32:    thumb: "/assets/gallery/prompt-03.png",
+src/app/page.tsx:46:  { title: "Neon Product Frame", caption: "Campaign-ready product photography.", src: "/assets/gallery/prompt-07.png", href: "/gallery?mode=image&style=neon", badge: "Image" },
+src/app/page.tsx:47:  { title: "Architectural Minimal", caption: "Clean forms, calm editorial tone.", src: "/assets/gallery/prompt-06.png", href: "/gallery?mode=image&style=minimal", badge: "Image" },
+src/app/page.tsx:48:  { title: "Cinematic Keyframe", caption: "Storyboard-ready shot direction.", src: "/assets/gallery/prompt-09.png", href: "/gallery?mode=video&style=cinematic", badge: "Video" },
+src/app/page.tsx:49:  { title: "UI Mockup Look", caption: "Modern UI / product interface shots.", src: "/assets/gallery/prompt-05.png", href: "/gallery?mode=image&style=product", badge: "Image" },
+src/app/page.tsx:50:  { title: "Soft Neon Portrait", caption: "Commercial-grade lighting & grade.", src: "/assets/gallery/prompt-04.png", href: "/gallery?mode=image&style=editorial", badge: "Image" },
+src/app/page.tsx:51:  { title: "Cyber Grade Remix", caption: "Same subject, fresher lighting.", src: "/assets/gallery/prompt-10.png", href: "/gallery?mode=remix&style=cyberpunk-neon-grade", badge: "Remix" },
+src/app/page.tsx:52:  { title: "Abstract Neon Form", caption: "Premium abstract motion still.", src: "/assets/gallery/prompt-11.png", href: "/gallery?mode=video&style=abstract-motion", badge: "Video" },
+src/app/page.tsx:53:  { title: "Vintage Film Feel", caption: "Kodak-like warmth and grain.", src: "/assets/gallery/prompt-08.png", href: "/gallery?mode=remix&style=film-emulation-kodak-style", badge: "Remix" },
+src/app/page.tsx:54:  { title: "Studio Still", caption: "High-key product lighting.", src: "/assets/gallery/prompt-04.png", href: "/gallery?mode=image&style=product", badge: "Image" },
+src/app/page.tsx:118:              src="/assets/branding/hero-panel.png"
+src/app/studio/StudioClient.tsx:188:      setOutputUrl(data.imageUrl || "/assets/gallery/prompt-01.png");
+src/components/ui/GeneratorPreviewCard.tsx:48:      setResultUrl(data.imageUrl || "/assets/gallery/prompt-01.png");
+src/components/ui/ShowcaseGrid.tsx:21:    src: "/assets/gallery/prompt-01.png",
+src/components/ui/ShowcaseGrid.tsx:28:    src: "/assets/gallery/prompt-02.png",
+src/components/ui/ShowcaseGrid.tsx:35:    src: "/assets/gallery/prompt-03.png",
+src/components/ui/ShowcaseGrid.tsx:42:    src: "/assets/gallery/prompt-04.png",
+src/components/ui/ShowcaseGrid.tsx:49:    src: "/assets/gallery/prompt-05.png",
+src/components/ui/ShowcaseGrid.tsx:56:    src: "/assets/gallery/prompt-06.png",
+src/components/ui/ShowcaseGrid.tsx:63:    src: "/assets/gallery/prompt-07.png",
+src/components/ui/ShowcaseGrid.tsx:70:    src: "/assets/gallery/prompt-08.png",
+src/components/ui/ShowcaseGrid.tsx:79:    src: "/assets/gallery/prompt-09.png",
+src/components/ui/ShowcaseGrid.tsx:86:    src: "/assets/gallery/prompt-10.png",
+src/components/ui/ShowcaseGrid.tsx:93:    src: "/assets/gallery/prompt-11.png",
+src/components/ui/ShowcaseGrid.tsx:100:    src: "/assets/gallery/prompt-12.png",
+src/components/ui/ShowcaseGrid.tsx:109:    src: "/assets/gallery/prompt-13.png",
+src/components/ui/ShowcaseGrid.tsx:116:    src: "/assets/gallery/prompt-14.png",
+src/components/ui/ShowcaseGrid.tsx:123:    src: "/assets/gallery/prompt-15.png",
+src/components/ui/ShowcaseGrid.tsx:130:    src: "/assets/gallery/prompt-16.png",
+src/data/characters.ts:26:  { id:"nova",   name:"Nova",   style:"realistic", gender:"female", category:"Popular",   chats: 9100000,  createdAt: ts("2025-11-20"), image:"/assets/gallery/prompt-04.png",   tags:["Popular","realistic","female","Neon Studio"], bio:"realistic • female" },
+src/data/characters.ts:27:  { id:"luxe",   name:"Luxe",   style:"stylised",  gender:"female", category:"Soft Neon", chats: 5100000,  createdAt: ts("2025-11-18"), image:"/assets/gallery/prompt-05.png",   tags:["Soft Neon","stylised","female","Glamour"],    bio:"stylised • female" },
+src/data/characters.ts:28:  { id:"cipher", name:"Cipher", style:"anime",     gender:"female", category:"Mystery",   chats: 3200000,  createdAt: ts("2025-11-16"), image:"/assets/gallery/prompt-06.png", tags:["Mystery","anime","female","Magic"],          bio:"anime • female" },
+src/data/characters.ts:29:  { id:"aria",   name:"Aria",   style:"stylised",  gender:"female", category:"Popular",   chats:10400000,  createdAt: ts("2025-11-22"), image:"/assets/gallery/prompt-07.png",   tags:["Popular","stylised","female","Warm Glow"],    bio:"stylised • female" },
+src/data/characters.ts:30:  { id:"vega",   name:"Vega",   style:"realistic", gender:"female", category:"Cosmic",    chats: 2700000,  createdAt: ts("2025-11-14"), image:"/assets/gallery/prompt-08.png",   tags:["Cosmic","realistic","female","Celestial"] ,  bio:"realistic • female" },
+src/data/characters.ts:31:  { id:"ember",  name:"Ember",  style:"stylised",  gender:"female", category:"Warm",      chats: 4100000,  createdAt: ts("2025-11-19"), image:"/assets/gallery/prompt-09.png",  tags:["Warm","stylised","female","Cyber Glam"],      bio:"stylised • female" },
+src/data/characters.ts:32:  { id:"onyx",   name:"Onyx",   style:"realistic", gender:"female", category:"Shadow",    chats: 1900000,  createdAt: ts("2025-11-12"), image:"/assets/gallery/prompt-10.png",   tags:["Shadow","realistic","female","Dark"],         bio:"realistic • female" },
+src/data/characters.ts:33:  { id:"seraph", name:"Seraph", style:"anime",     gender:"female", category:"Ethereal",  chats: 6200000,  createdAt: ts("2025-11-21"), image:"/assets/gallery/prompt-11.png", tags:["Ethereal","anime","female","Soft Pink"],      bio:"anime • female" },
+src/data/characters.ts:39:  { id:"dahlia", name:"Dahlia", style:"stylised",  gender:"female", category:"Velvet",   chats: 1400000, createdAt: ts("2025-11-10"), image:"/assets/gallery/prompt-09.png", tags:["Velvet","stylised","female","Vampire"],      personalityTags:["dominant","velvet","mysterious"] },
+src/data/characters.ts:40:  { id:"nyx",    name:"Nyx",    style:"anime",     gender:"female", category:"Mystery",  chats: 2200000, createdAt: ts("2025-11-09"), image:"/assets/gallery/prompt-10.png", tags:["Mystery","anime","female","Gothic"],         personalityTags:["dark","flirty","chaotic"] },
+src/data/characters.ts:41:  { id:"solaris",name:"Solaris",style:"realistic", gender:"female", category:"Cosmic",   chats: 1800000, createdAt: ts("2025-11-08"), image:"/assets/gallery/prompt-11.png", tags:["Cosmic","realistic","female","Golden"],       personalityTags:["calm","radiant","wise"] },
+src/data/characters.ts:42:  { id:"faye",   name:"Faye",   style:"stylised",  gender:"female", category:"Ethereal", chats: 1500000, createdAt: ts("2025-11-07"), image:"/assets/gallery/prompt-12.png", tags:["Ethereal","stylised","female","Pastel"],      personalityTags:["sweet","playful","soft"] },
+src/data/characters.ts:43:  { id:"riven",  name:"Riven",  style:"realistic", gender:"female", category:"Cyber",    chats: 2000000, createdAt: ts("2025-11-06"), image:"/assets/gallery/prompt-13.png", tags:["Cyber","realistic","female","Assassin"],      personalityTags:["intense","focused","dangerous"] },
+src/data/characters.ts:44:  { id:"astra",  name:"Astra",  style:"anime",     gender:"female", category:"Soft Neon",chats: 1700000, createdAt: ts("2025-11-05"), image:"/assets/gallery/prompt-14.png", tags:["Soft Neon","anime","female","Idol"],          personalityTags:["bright","confident","sparkly"] },
+src/data/characters.ts:45:  { id:"echo",   name:"Echo",   style:"stylised",  gender:"female", category:"Cyber",    chats: 1600000, createdAt: ts("2025-11-04"), image:"/assets/gallery/prompt-15.png", tags:["Cyber","stylised","female","Glitch"],         personalityTags:["weird","hypnotic","glitchy"] },
+src/data/characters.ts:46:  { id:"marrow", name:"Marrow", style:"anime",     gender:"female", category:"Shadow",   chats: 1300000, createdAt: ts("2025-11-03"), image:"/assets/gallery/prompt-16.png", tags:["Shadow","anime","female","Horror"],          personalityTags:["cold","predatory","silent"] },
+src/lib/branding.ts:1:export const NB_BRAND_LOGO_SRC = "/assets/branding/vision-ai-logo.png";
+src/lib/visionGallery.ts:55:  src: string; // /gallery/<mode>/<styleSlug>/<NN>.png
+src/lib/visionGallery.ts:115:export const FALLBACK_THUMB = "/assets/gallery/prompt-01.png";
+src/lib/visionGallery.ts:127:      src: `/gallery/${mode}/${styleSlug}/${nn}.png`,
+
+==============================
+3) EXTRACTED PATHS (unique) + EXISTENCE CHECK
+   - Detects '/something.png' and import paths like './x.png' or '@/.../x.png'
+==============================
+
+STATUS    PATH
+------    ----
+OK        /assets/branding/hero-panel.png
+OK        /assets/branding/vision-ai-logo.png
+MISSING   /assets/characters/nova/${idx}.png
+MISSING   /assets/characters/nova/portrait.png
+OK        /assets/gallery/prompt-01.png
+OK        /assets/gallery/prompt-02.png
+OK        /assets/gallery/prompt-03.png
+OK        /assets/gallery/prompt-04.png
+OK        /assets/gallery/prompt-05.png
+OK        /assets/gallery/prompt-06.png
+OK        /assets/gallery/prompt-07.png
+OK        /assets/gallery/prompt-08.png
+OK        /assets/gallery/prompt-09.png
+OK        /assets/gallery/prompt-10.png
+OK        /assets/gallery/prompt-11.png
+OK        /assets/gallery/prompt-12.png
+MISSING   /assets/gallery/prompt-13.png
+MISSING   /assets/gallery/prompt-14.png
+MISSING   /assets/gallery/prompt-15.png
+MISSING   /assets/gallery/prompt-16.png
+MISSING   /gallery/${mode}/${styleSlug}/${nn}.png
+
+==============================
+4) WHERE EACH '/public' IMAGE IS USED (reverse lookup)
+   (Gives you: image -> file(s) that reference it)
+==============================
+
+DONE. Report saved to: /c/Users/josht/Desktop/vision-ai/image-audit-2025-11-30_04-13-53.txt

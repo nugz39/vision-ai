@@ -1,10 +1,10 @@
-import { Suspense } from "react";
-import VisionGalleryClient from "@/components/gallery/VisionGalleryClient";
+import { PageShell } from "@/components/layout/PageShell";
+import { GalleryClient } from "./GalleryClient";
 
-export default function Page() {
+export default function GalleryPage() {
   return (
-    <Suspense fallback={<div className="mx-auto max-w-6xl px-4 py-16 text-sm text-black/55">Loading gallery…</div>}>
-      <VisionGalleryClient initialMode="image" />
-    </Suspense>
+    <PageShell>
+      <GalleryClient />
+    </PageShell>
   );
 }
