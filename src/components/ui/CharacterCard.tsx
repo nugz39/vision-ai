@@ -14,7 +14,7 @@ function HeartIcon({ className }: { className?: string }) {
 
 export function CharacterCard({ character }: { character: Character }) {
   const [imgError, setImgError] = useState(false);
-  const styleTags = `${character.style} • ${character.gender}`;
+  const styleTags = `${character.style} â€¢ ${character.gender}`;
 
   return (
     <Link href={`/characters/${character.id}`} className="block w-full max-w-full">
@@ -98,7 +98,7 @@ export function CharacterCard({ character }: { character: Character }) {
                 }}
               >
                 <HeartIcon className="h-3.5 w-3.5" />
-                {character.chats.toLocaleString()}
+                {(character.chats ?? 0).toLocaleString()}
               </div>
             </div>
           </div>
