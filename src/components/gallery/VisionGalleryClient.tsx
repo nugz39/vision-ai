@@ -61,8 +61,8 @@ function Modal({
   const qp = new URLSearchParams();
   qp.set("mode", item.mode);
   qp.set("style", String(item.style));
-  qp.set("seed", String(item.seed));
-  qp.set("prompt", item.prompt);
+  if ((item as any).seed != null) qp.set("seed", String((item as any).seed));
+  if (item.prompt != null) qp.set("prompt", String(item.prompt));
   const studioHref = `/studio?${qp.toString()}`;
 
   return (
@@ -119,13 +119,13 @@ function Modal({
                 <div className="mt-2 text-sm text-[#0B1220]">
                   <div className="font-semibold">{item.caption}</div>
                   <div className="mt-2 text-xs text-black/55">
-                    <span className="font-semibold text-[#0B1220]">Seed:</span> {item.seed}
+                    <span className="font-semibold text-[#0B1220]">Seed:</span> {(item as any).seed ?? "—"}
                   </div>
                 </div>
 
                 <div className="mt-4 rounded-2xl border bg-white/70 p-4" style={{ borderColor: "rgba(2,6,23,0.10)" }}>
                   <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-black/55">Prompt</div>
-                  <div className="mt-2 text-sm leading-relaxed text-[#0B1220]">{item.prompt}</div>
+                  <div className="mt-2 text-sm leading-relaxed text-[#0B1220]">{item.prompt ?? ""}</div>
                 </div>
               </div>
             </div>
@@ -173,7 +173,7 @@ export default function VisionGalleryClient({ initialMode, initialStyleSlug }: P
 
   const styleInit = useMemo(() => {
     const slug = styleFromQuery || initialStyleSlug || slugifyStyle(String(styles[0]));
-    return styleFromSlug(mode, slug) ?? styles[0];
+    return styleFromSlug(slug) ?? styles[0];
   }, [mode, styleFromQuery, initialStyleSlug, styles]);
 
   const [activeStyle, setActiveStyle] = useState<AnyStyle>(styleInit);
