@@ -85,7 +85,7 @@ function Modal({
       >
         <div className="flex items-center justify-between gap-3 border-b px-5 py-4" style={{ borderColor: "rgba(2,6,23,0.10)" }}>
           <div className="text-sm font-semibold text-[#0B1220]">
-            {modeLabel(item.mode)} — {String(item.style)}
+            {modeLabel(item.mode)} â€” {String(item.style)}
           </div>
           <button
             type="button"
@@ -119,7 +119,7 @@ function Modal({
                 <div className="mt-2 text-sm text-[#0B1220]">
                   <div className="font-semibold">{item.caption}</div>
                   <div className="mt-2 text-xs text-black/55">
-                    <span className="font-semibold text-[#0B1220]">Seed:</span> {(item as any).seed ?? "—"}
+                    <span className="font-semibold text-[#0B1220]">Seed:</span> {(item as any).seed ?? "â€”"}
                   </div>
                 </div>
 
@@ -233,7 +233,7 @@ export default function VisionGalleryClient({ initialMode, initialStyleSlug }: P
               className="group relative overflow-hidden rounded-2xl border border-black/5 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
               <div className="absolute left-3 top-3 z-10">
-                <OverlayChip text={`${modeLabel(it.mode)} — ${String(it.style)}`} />
+                <OverlayChip text={`${modeLabel(it.mode)} â€” ${String(it.style)}`} />
               </div>
 
               <div className="aspect-[4/5] w-full overflow-hidden bg-black/[0.02]">

@@ -48,3 +48,6 @@ build.log
 npm-upgrade.log
 package.json.BAK-*
 
+build.log
+npm-upgrade.log
+package.json.BAK-*
