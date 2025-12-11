@@ -1,87 +1,110 @@
-import { NextRequest } from "next/server";
-import { z } from "zod";
-import { hfGenerateImage } from "@/lib/hfRouter";
+import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+type PreviewMode = "image" | "video" | "remix";
 
-const BodySchema = z.object({
-  mode: z.enum(["image", "video", "remix"]).default("image"),
-  prompt: z.string().min(1, "Prompt is required").max(2000, "Prompt too long"),
+interface PreviewRequestBody {
+  mode?: PreviewMode;
+  prompt?: string;
+  width?: number;
+  height?: number;
+  [key: string]: unknown;
+}
 
-  // optional knobs
-  width: z.number().int().min(256).max(1536).optional(),
-  height: z.number().int().min(256).max(1536).optional(),
-  num_inference_steps: z.number().int().min(1).max(80).optional(),
-  guidance_scale: z.number().min(0).max(30).optional(),
-  seed: z.number().int().min(0).max(2147483647).optional(),
-  negative_prompt: z.string().max(2000).optional(),
+const BACKEND_BASE =
+  process.env.VISION_AI_BACKEND_BASE ??
+  process.env.VISION_AI_HF_BASE ??
+  "https://Nugz39-vision-ai-backend.hf.space";
 
-  // UI metadata (safe to ignore on backend for now)
-  style: z.string().max(80).optional(),
-  quality: z.string().max(40).optional(),
-  aspectRatio: z.string().max(16).optional(),
-});
+/**
+ * For previews we hit your real backend:
+ * - image / remix -> /generate
+ * - video         -> /generate_video
+ */
+function getPreviewUrl(mode: PreviewMode): string {
+  if (mode === "video") {
+    return (
+      process.env.VISION_AI_VIDEO_API ??
+      ${BACKEND_BASE}/generate_video
+    );
+  }
 
-function bytesToDataUrl(bytes: Uint8Array, contentType?: string) {
-  const ct = contentType || "image/png";
-  const b64 = Buffer.from(bytes).toString("base64");
-  return `data:${ct};base64,${b64}`;
+  // image + remix share the same text->image endpoint for now
+  return (
+    process.env.VISION_AI_GENERATE_API ??
+    ${BACKEND_BASE}/generate
+  );
 }
 
 export async function POST(req: NextRequest) {
+  let body: PreviewRequestBody;
+
   try {
-    const json = await req.json().catch(() => null);
-    const parsed = BodySchema.safeParse(json);
+    body = (await req.json()) as PreviewRequestBody;
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid JSON in request body" },
+      { status: 400 }
+    );
+  }
 
-    if (!parsed.success) {
-      return Response.json(
-        { ok: false, error: parsed.error.issues.map((i) => i.message).join(", ") },
-        { status: 400 }
-      );
-    }
+  const mode = (body.mode ?? "image") as PreviewMode;
+  const url = getPreviewUrl(mode);
 
-    const {
-      mode,
-      prompt,
-      width = 768,
-      height = 960,
-      num_inference_steps = 30,
-      guidance_scale = 7.5,
-      seed,
-      negative_prompt,
-    } = parsed.data;
+  // Build a "preview-safe" payload – smaller + faster
+  const payload: Record<string, unknown> = {
+    prompt: body.prompt ?? "",
+    width: body.width ?? 768,
+    height: body.height ?? 768,
+    num_inference_steps: 16,
+    guidance_scale: 4.5,
+  };
 
-    // Placeholder for Video/Remix until wired
-    if (mode !== "image") {
-      const fallback =
-        mode === "video" ? "/assets/gallery/prompt-02.png" : "/assets/gallery/prompt-03.png";
-      return Response.json({ ok: true, imageUrl: fallback }, { status: 200 });
-    }
-
-    const payload: any = {
-      inputs: prompt,
-      parameters: {
-        width,
-        height,
-        num_inference_steps,
-        guidance_scale,
+  try {
+    const backendResp = await fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-vision-mode": mode,
       },
-    };
+      body: JSON.stringify(payload),
+    });
 
-    if (typeof seed === "number") payload.parameters.seed = seed;
-    if (typeof negative_prompt === "string" && negative_prompt.trim().length > 0) {
-      payload.parameters.negative_prompt = negative_prompt.trim();
+    const contentType = backendResp.headers.get("content-type") ?? "";
+
+    // Most common: backend returns raw image / webp bytes
+    if (contentType.startsWith("image/") || contentType.startsWith("video/")) {
+      const buf = Buffer.from(await backendResp.arrayBuffer());
+      return new NextResponse(buf, {
+        status: backendResp.status,
+        headers: {
+          "content-type": contentType,
+        },
+      });
     }
 
-    const { bytes, contentType } = await hfGenerateImage(payload);
-    const imageUrl = bytesToDataUrl(bytes, contentType);
+    // JSON payload (if you ever change the backend to return metadata)
+    if (contentType.includes("application/json")) {
+      const data = await backendResp.json();
+      return NextResponse.json(data, { status: backendResp.status });
+    }
 
-    return Response.json({ ok: true, imageUrl }, { status: 200 });
-  } catch (e: any) {
-    return Response.json(
-      { ok: false, error: e?.message ?? "Generation failed" },
-      { status: 500 }
+    // Fallback: raw proxy
+    const buf = Buffer.from(await backendResp.arrayBuffer());
+    return new NextResponse(buf, {
+      status: backendResp.status,
+      headers: {
+        "content-type": contentType || "application/octet-stream",
+      },
+    });
+  } catch (err) {
+    console.error("[VISION AI] /api/generate-preview error:", err);
+    return NextResponse.json(
+      {
+        error: "Preview generation error",
+        details:
+          err instanceof Error ? err.message : "Unknown error calling backend",
+      },
+      { status: 502 }
     );
   }
 }
