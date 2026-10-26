@@ -47,8 +47,8 @@ export function NbButton({
   })();
 
   const gradient = isStudio
-    ? "linear-gradient(120deg,#7AF63C,#00F2FF)"
-    : "linear-gradient(120deg,#00F2FF,#CB2FFF,#7B2CFF)";
+    ? "linear-gradient(110deg,#087EAC,#2469B7,#7140B6)"
+    : "linear-gradient(110deg,#087EAC,#2469B7,#7140B6)";
 
   return (
     <button
