@@ -31,7 +31,7 @@ const MODE_OPTIONS: ModeTabsOption<GalleryMode>[] = [
 
 function OverlayChip({ text }: { text: string }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-black/5 bg-white px-3 py-1 text-xs font-medium text-slate-800 shadow-sm">
+    <span className="inline-flex items-center rounded-full border border-white/20 bg-[#07111F]/85 px-3 py-1 text-xs font-medium text-white shadow-sm backdrop-blur">
       {text}
     </span>
   );
@@ -84,8 +84,8 @@ function Modal({
         style={{ borderColor: "rgba(2,6,23,0.12)" }}
       >
         <div className="flex items-center justify-between gap-3 border-b px-5 py-4" style={{ borderColor: "rgba(2,6,23,0.10)" }}>
-          <div className="text-sm font-semibold text-[#0B1220]">
-            {modeLabel(item.mode)} â€” {String(item.style)}
+          <div className="text-sm font-semibold text-white">
+            {modeLabel(item.mode)} — {String(item.style)}
           </div>
           <button
             type="button"
@@ -119,7 +119,7 @@ function Modal({
                 <div className="mt-2 text-sm text-[#0B1220]">
                   <div className="font-semibold">{item.caption}</div>
                   <div className="mt-2 text-xs text-black/55">
-                    <span className="font-semibold text-[#0B1220]">Seed:</span> {(item as any).seed ?? "â€”"}
+                    <span className="font-semibold text-[#0B1220]">Seed:</span> {(item as any).seed ?? "—"}
                   </div>
                 </div>
 
@@ -203,11 +203,11 @@ export default function VisionGalleryClient({ initialMode, initialStyleSlug }: P
   }, [mode, activeStyle]);
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-12">
+    <main className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-8 sm:py-20">
       <div className="max-w-3xl">
-        <h1 className="text-4xl font-semibold tracking-tight text-[#0B1220] sm:text-5xl">Gallery</h1>
-        <p className="mt-3 text-sm leading-relaxed text-black/55 sm:text-base">
-          Explore organised, style-based outputs. <span className="font-semibold text-[#0B1220]">12 thumbnails per style</span>.
+        <h1 className="text-4xl font-extrabold tracking-[-0.05em] text-white sm:text-6xl">Gallery</h1>
+        <p className="mt-3 text-sm leading-relaxed text-[#A8BCD2] sm:text-base">
+          Explore creative directions, styles and visual inspiration.
         </p>
       </div>
 
@@ -224,16 +224,16 @@ export default function VisionGalleryClient({ initialMode, initialStyleSlug }: P
       </div>
 
       <section className="mt-8">
-        <div className="grid gap-5 [grid-auto-rows:1fr] grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
           {shown.map((it) => (
             <button
               key={it.id}
               type="button"
               onClick={() => setSelected(it)}
-              className="group relative overflow-hidden rounded-2xl border border-black/5 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              className="group relative overflow-hidden rounded-2xl border border-white/15 bg-[#101E30] text-left shadow-lg transition hover:-translate-y-0.5 hover:border-[#4876C1]/60 hover:shadow-xl"
             >
               <div className="absolute left-3 top-3 z-10">
-                <OverlayChip text={`${modeLabel(it.mode)} â€” ${String(it.style)}`} />
+                <OverlayChip text={`${modeLabel(it.mode)} — ${String(it.style)}`} />
               </div>
 
               <div className="aspect-[4/5] w-full overflow-hidden bg-black/[0.02]">
@@ -249,14 +249,14 @@ export default function VisionGalleryClient({ initialMode, initialStyleSlug }: P
 
               <div className="px-4 pb-4 pt-3">
                 <div className="text-sm font-semibold text-[#0B1220]">{it.title}</div>
-                <div className="mt-1 text-[12px] text-black/55">{it.caption}</div>
+                <div className="mt-1 text-[12px] text-[#A8BCD2]">{it.caption}</div>
               </div>
             </button>
           ))}
         </div>
 
-        <div className="mt-8 flex items-center justify-center">
-          <PrimaryGradientButton onClick={() => setVisible(12)}>Load more</PrimaryGradientButton>
+        <div className="mt-10 flex items-center justify-center">
+          <PrimaryGradientButton onClick={() => setVisible(v => v + 12)} disabled={visible >= items.length}>{visible >= items.length ? "All images loaded" : "Load more"}</PrimaryGradientButton>
         </div>
       </section>
 
