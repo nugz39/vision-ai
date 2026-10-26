@@ -1,211 +1,91 @@
 import Link from "next/link";
-import StudioGradientShell from "@/components/layout/StudioGradientShell";
 import GeneratorPreviewCard from "@/components/ui/GeneratorPreviewCard";
 
-type ModeCard = {
-  id: "image" | "video" | "remix";
-  title: string;
-  description: string;
-  thumb: string;
-  studioHref: string;
-};
-
-const MODE_CARDS: ModeCard[] = [
-  {
-    id: "image",
-    title: "Image",
-    description: "Generate studio-grade visuals for ads, decks, and socials.",
-    thumb: "/assets/gallery/prompt-01.png",
-    studioHref: "/studio?mode=image&style=neon",
-  },
-  {
-    id: "video",
-    title: "Video",
-    description: "Create motion keyframes and guidance for edits and cuts.",
-    thumb: "/assets/gallery/prompt-02.png",
-    studioHref: "/studio?mode=video&style=cinematic",
-  },
-  {
-    id: "remix",
-    title: "Remix",
-    description: "Re-style and re-grade existing assets instantly.",
-    thumb: "/assets/gallery/prompt-03.png",
-    studioHref: "/studio?mode=remix&style=soft-pastel-grade",
-  },
+const gallery = [
+  { src: "/assets/gallery/prompt-07.png", title: "Creative campaigns", tag: "Image" },
+  { src: "/assets/gallery/prompt-09.png", title: "Cinematic stories", tag: "Video" },
+  { src: "/assets/gallery/prompt-06.png", title: "Beautiful environments", tag: "Image" },
+  { src: "/assets/gallery/prompt-04.png", title: "Editorial visions", tag: "Remix" },
 ];
-
-type ShowcaseItem = {
-  title: string;
-  caption: string;
-  src: string;
-  href: string;
-  badge: "Image" | "Video" | "Remix";
-};
-
-const SHOWCASE: ShowcaseItem[] = [
-  { title: "Neon Product Frame", caption: "Campaign-ready product photography.", src: "/assets/gallery/prompt-07.png", href: "/gallery?mode=image&style=neon", badge: "Image" },
-  { title: "Architectural Minimal", caption: "Clean forms, calm editorial tone.", src: "/assets/gallery/prompt-06.png", href: "/gallery?mode=image&style=minimal", badge: "Image" },
-  { title: "Cinematic Keyframe", caption: "Storyboard-ready shot direction.", src: "/assets/gallery/prompt-09.png", href: "/gallery?mode=video&style=cinematic", badge: "Video" },
-  { title: "UI Mockup Look", caption: "Modern UI / product interface shots.", src: "/assets/gallery/prompt-05.png", href: "/gallery?mode=image&style=product", badge: "Image" },
-  { title: "Soft Neon Portrait", caption: "Commercial-grade lighting & grade.", src: "/assets/gallery/prompt-04.png", href: "/gallery?mode=image&style=editorial", badge: "Image" },
-  { title: "Cyber Grade Remix", caption: "Same subject, fresher lighting.", src: "/assets/gallery/prompt-10.png", href: "/gallery?mode=remix&style=cyberpunk-neon-grade", badge: "Remix" },
-  { title: "Abstract Neon Form", caption: "Premium abstract motion still.", src: "/assets/gallery/prompt-11.png", href: "/gallery?mode=video&style=abstract-motion", badge: "Video" },
-  { title: "Vintage Film Feel", caption: "Kodak-like warmth and grain.", src: "/assets/gallery/prompt-08.png", href: "/gallery?mode=remix&style=film-emulation-kodak-style", badge: "Remix" },
-  { title: "Studio Still", caption: "High-key product lighting.", src: "/assets/gallery/prompt-04.png", href: "/gallery?mode=image&style=product", badge: "Image" },
+const tools = [
+  { icon: "▧", title: "Images", desc: "Turn a written idea into distinctive, polished visuals.", href: "/studio?mode=image", color: "text-[#366AD4]" },
+  { icon: "▷", title: "Video", desc: "Explore cinematic scenes and motion in one workspace.", href: "/studio?mode=video", color: "text-[#009DAB]" },
+  { icon: "✧", title: "Remix", desc: "Experiment with fresh styles and creative directions.", href: "/studio?mode=remix", color: "text-[#8A4CE6]" },
+  { icon: "✦", title: "Creative tools", desc: "Fine-tune your vision with intuitive studio controls.", href: "/studio", color: "text-[#148E9E]" },
 ];
-
-function OverlayChip({ text }: { text: string }) {
-  return (
-    <span className="inline-flex items-center rounded-full border border-black/5 bg-white px-3 py-1 text-xs font-medium text-slate-800 shadow-sm">
-      {text}
-    </span>
-  );
-}
-
-/** Match Support "Send message" gradient for primary buttons in Home */
-const supportGradientBtn =
-  "relative inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold tracking-[0.01em] text-white " +
-  "bg-gradient-to-r from-[#13DFFF] via-[#C931FD] to-[#842CFE] " +
-  "shadow-[0_12px_30px_rgba(132,44,254,0.22)] " +
-  "transition-transform duration-150 ease-out will-change-transform " +
-  "hover:scale-[1.02] hover:shadow-[0_16px_44px_rgba(19,223,255,0.18)] hover:brightness-[1.03] " +
-  "active:scale-[0.995] active:brightness-[0.95] " +
-  "before:pointer-events-none before:absolute before:inset-[-2px] before:rounded-full before:opacity-0 before:transition-opacity before:duration-150 " +
-  "before:bg-[linear-gradient(90deg,rgba(19,223,255,0.0),rgba(19,223,255,0.12),rgba(201,49,253,0.10),rgba(132,44,254,0.10),rgba(132,44,254,0.0))] " +
-  "hover:before:opacity-100";
+const primary = "inline-flex min-h-14 items-center justify-center rounded-full bg-gradient-to-r from-[#087EAC] via-[#2469B7] to-[#7140B6] px-8 text-[15px] font-bold text-white shadow-[0_12px_28px_rgba(26,67,133,0.24)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_32px_rgba(26,67,133,0.32)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#337BB5]";
+const secondary = "inline-flex min-h-14 items-center justify-center rounded-full border border-white/35 bg-white/[0.06] px-8 text-[15px] font-semibold text-white transition hover:bg-white/[0.13]";
 
 export default function Page() {
   return (
-    <StudioGradientShell>
-      <main className="mx-auto w-full max-w-7xl px-4 pb-16 pt-5 sm:px-6 sm:pt-8">
-        {/* HERO — mobile-first editorial layout */}
-        <section className="relative isolate overflow-hidden rounded-[2rem] bg-[radial-gradient(ellipse_at_90%_12%,rgba(180,149,255,0.22),transparent_50%),radial-gradient(ellipse_at_5%_60%,rgba(0,205,229,0.12),transparent_55%),#F9FBFF] px-5 pb-8 pt-16 sm:px-10 sm:pt-20 lg:px-14 lg:py-24">
-          <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
-            <div className="max-w-[680px]">
-              <div className="inline-flex items-center rounded-full border border-[#9BDAE3]/70 bg-[#E7FAF9]/75 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] text-[#267E85] sm:text-xs">
-                YOUR CREATIVE AI STUDIO
-              </div>
-              <h1 className="mt-8 text-[clamp(3.25rem,8.5vw,6.1rem)] font-extrabold leading-[0.99] tracking-[-0.065em] text-[#081A30]">
-                Your ideas.
-                <br />
-                <span className="bg-gradient-to-r from-[#129BDF] via-[#20B5CE] to-[#7E38E8] bg-clip-text text-transparent">Without limits.</span>
-              </h1>
-              <p className="mt-7 max-w-[590px] text-[17px] leading-[1.75] text-[#526578] sm:text-xl">
-                Create striking images, explore cinematic video and shape your next idea in one intuitive AI workspace.
-              </p>
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Link href="/studio" className="inline-flex min-h-14 items-center justify-center rounded-full bg-gradient-to-r from-[#0E9DE5] via-[#16B9D2] to-[#8437E7] px-8 text-base font-bold text-white shadow-[0_12px_32px_rgba(18,151,199,0.22)] transition hover:-translate-y-0.5 hover:shadow-xl">
-                  Start creating <span aria-hidden="true" className="ml-2">→</span>
-                </Link>
-                <Link href="/gallery" className="inline-flex min-h-14 items-center justify-center rounded-full border border-[#D5DDE6] bg-white px-8 text-base font-bold text-[#13243B] shadow-sm transition hover:bg-slate-50">
-                  Explore the gallery
-                </Link>
-              </div>
-              <p className="mt-7 text-sm leading-relaxed text-[#607386]">One creative space for images, motion and fresh perspectives.</p>
+    <main className="bg-[#F8FAFD]">
+      <section className="relative isolate overflow-hidden bg-[#07111F] text-white">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_90%_35%,rgba(100,55,178,0.42),transparent_45%),radial-gradient(ellipse_at_62%_65%,rgba(0,132,187,0.25),transparent_55%)]" />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 pb-12 pt-16 sm:px-10 sm:pt-24 lg:min-h-[650px] lg:grid-cols-[1.04fr_0.96fr] lg:gap-6 lg:py-20">
+          <div className="relative z-10 max-w-2xl">
+            <div className="mb-6 text-[11px] font-bold uppercase tracking-[0.34em] text-[#C0D4E9] sm:text-xs">Premium multi-modal AI studio</div>
+            <h1 className="text-[clamp(3.5rem,8.5vw,6.5rem)] font-extrabold leading-[0.98] tracking-[-0.065em]">
+              Your ideas.<br /><span className="bg-gradient-to-r from-[#3AD3DC] via-[#718DF2] to-[#C579EA] bg-clip-text text-transparent">Without limits.</span>
+            </h1>
+            <p className="mt-7 max-w-xl text-[17px] leading-[1.7] text-[#D3E0EE] sm:text-xl">
+              Create striking images, explore cinematic video and reimagine your ideas with the power of AI. One creative space, endless possibilities.
+            </p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Link href="/studio" className={primary}>Open Studio <span aria-hidden="true" className="ml-3">→</span></Link>
+              <Link href="/gallery" className={secondary}>Explore gallery</Link>
             </div>
-            <div className="relative">
-              <div className="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-br from-[#35C5E0]/15 to-[#AF70F5]/15 blur-2xl" aria-hidden="true" />
-              <div className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/70 p-2 shadow-[0_25px_70px_rgba(22,41,81,0.14)]">
-                <div className="relative aspect-[4/4.3] overflow-hidden rounded-[1.5rem] sm:aspect-[5/4] lg:aspect-[4/5]">
-                  <img src="/assets/branding/hero-panel.png" alt="Abstract luminous visual created for Vision AI" className="h-full w-full object-cover" />
-                  <div className="absolute bottom-4 left-4 rounded-full border border-white/50 bg-white/85 px-4 py-2 text-xs font-bold tracking-wide text-[#203149] shadow-sm backdrop-blur-md">Imagine · Create · Refine</div>
-                </div>
+            <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-xs font-medium text-[#C7D8E8]">
+              <span>✧ Creative freedom</span><span>◇ Beautiful visual results</span><span>∞ Images, video &amp; more</span>
+            </div>
+          </div>
+          <div className="relative mx-auto w-full max-w-[590px] lg:max-w-none">
+            <div aria-hidden="true" className="absolute -inset-5 rounded-full bg-gradient-to-tr from-[#0DA6CF]/20 to-[#9B59DA]/30 blur-3xl" />
+            <div className="relative grid grid-cols-2 gap-3 [transform:rotate(-2deg)] sm:gap-4">
+              <div className="space-y-3 pt-10 sm:space-y-4">
+                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/gallery/prompt-07.png" alt="Creative image example" className="aspect-[4/5] w-full object-cover" /><span className="absolute bottom-3 left-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold backdrop-blur">Images</span></div>
+                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/gallery/prompt-06.png" alt="Creative landscape example" className="aspect-[5/4] w-full object-cover" /></div>
+              </div>
+              <div className="space-y-3 sm:space-y-4">
+                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/gallery/prompt-09.png" alt="Cinematic creative example" className="aspect-[5/4] w-full object-cover" /><span className="absolute bottom-3 right-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold backdrop-blur">Video</span></div>
+                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/gallery/prompt-04.png" alt="Artistic portrait example" className="aspect-[4/5] w-full object-cover" /><span className="absolute bottom-3 right-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold backdrop-blur">Remix</span></div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* MODES */}
-        <section className="mt-20">
-          <div className="text-center">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/55">Modes</div>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#0B1220] sm:text-4xl">
-              Choose your workflow
-            </h2>
+      <section className="mx-auto max-w-7xl px-6 py-20 sm:px-10">
+        <div className="mb-9"><div className="text-xs font-bold uppercase tracking-[0.25em] text-[#698097]">Everything in one place</div><h2 className="mt-3 text-3xl font-extrabold tracking-[-0.045em] text-[#0C1A2C] sm:text-5xl">Create without the complexity.</h2></div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {tools.map(t => <Link key={t.title} href={t.href} className="group rounded-[1.6rem] border border-[#E8ECF4] bg-white p-7 shadow-[0_10px_35px_rgba(24,45,78,0.04)] transition hover:-translate-y-1 hover:shadow-xl">
+            <div className={`text-4xl font-bold ${t.color}`}>{t.icon}</div><h3 className="mt-7 text-xl font-bold text-[#0D2036]">{t.title}</h3><p className="mt-3 min-h-16 text-sm leading-relaxed text-[#667589]">{t.desc}</p><span className="mt-5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#E0E6EF] text-[#346EAA] transition group-hover:bg-[#EAF4FC]">→</span>
+          </Link>)}
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-7xl items-center gap-12 px-6 pb-24 sm:px-10 lg:grid-cols-2">
+        <div className="grid grid-cols-2 gap-3">
+          {gallery.map(g => <div key={g.title} className="group relative overflow-hidden rounded-[1.4rem]"><img src={g.src} alt={g.title} className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105" /><span className="absolute bottom-3 left-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold text-white backdrop-blur">{g.tag}</span></div>)}
+        </div>
+        <div className="lg:pl-10">
+          <div className="text-xs font-bold uppercase tracking-[0.24em] text-[#72849A]">Built for creators and businesses</div>
+          <h2 className="mt-4 text-4xl font-extrabold leading-[1.08] tracking-[-0.05em] text-[#0D1C30] sm:text-5xl">Professional results.<br />Made simple.</h2>
+          <p className="mt-6 text-base leading-[1.85] text-[#607287]">Whether you are creating content, building a brand or exploring something new, Vision AI brings your ideas to life with a focused creative workspace.</p>
+          <ul className="mt-7 space-y-4 text-sm font-medium text-[#273C52]"><li>✧ Explore distinct visual styles</li><li>◇ Create for campaigns, stories and personal projects</li><li>✦ Refine ideas with flexible creative controls</li><li>∞ Move between image and video workflows</li></ul>
+          <Link href="/studio" className="mt-9 inline-flex min-h-12 items-center justify-center rounded-full border border-[#C9D5E3] bg-white px-7 text-sm font-bold text-[#15314C] transition hover:bg-[#EAF2FA]">Explore the Studio →</Link>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-20 sm:px-10">
+        <div className="overflow-hidden rounded-[2rem] bg-[radial-gradient(ellipse_at_100%_100%,rgba(53,146,200,0.35),transparent_45%),#0B1522] px-7 py-12 text-white sm:px-12 sm:py-16">
+          <div className="text-xs font-bold uppercase tracking-[0.28em] text-[#B9C9DB]">How it works</div>
+          <div className="mt-3 flex flex-col justify-between gap-6 sm:flex-row sm:items-center"><h2 className="max-w-xl text-3xl font-extrabold tracking-[-0.04em] sm:text-4xl">From idea to incredible in three simple steps.</h2><Link href="/studio" className={primary}>Open Studio →</Link></div>
+          <div className="mt-12 grid gap-8 sm:grid-cols-3">
+            {[["01","Describe your vision","Start with a prompt and the scene you imagine."],["02","Choose your direction","Select a mode, style and creative settings."],["03","Generate and refine","See the result, adjust and keep exploring."]].map(([n,t,d])=><div key={n} className="border-t border-white/20 pt-5"><span className="text-2xl font-light text-[#73C6EB]">{n}</span><h3 className="mt-4 text-lg font-bold">{t}</h3><p className="mt-2 text-sm leading-relaxed text-[#B8C9DA]">{d}</p></div>)}
           </div>
-
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {MODE_CARDS.map((m) => (
-              <div
-                key={m.id}
-                className="flex h-full min-h-[420px] flex-col overflow-hidden rounded-3xl border border-black/5 bg-white/75 shadow-sm"
-              >
-                <div className="p-6">
-                  <div className="text-xl font-semibold text-[#0B1220]">{m.title}</div>
-                  <div className="mt-2 text-sm leading-relaxed text-black/55">{m.description}</div>
-
-                  <div className="mt-5 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
-                    <div className="aspect-[16/10] w-full bg-black/[0.02]">
-                      <img src={m.thumb} alt={`${m.title} thumbnail`} className="h-full w-full object-cover" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-auto p-6 pt-0">
-                  <div className="flex justify-center">
-                    <Link href={m.studioHref} className={`${supportGradientBtn} w-full`}>
-                      Open in Studio
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* GENERATOR PREVIEW */}
-        <section className="mt-14">
-          <GeneratorPreviewCard className="mx-auto max-w-6xl" />
-        </section>
-
-        {/* SHOWCASE */}
-        <section className="mt-14">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/55">Generator showcase</div>
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#0B1220] sm:text-4xl">
-                Curated outputs across modes
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-black/55 sm:text-base">
-                Explore a curated set of image, video, and remix outputs from Vision AI.
-              </p>
-            </div>
-
-            <Link href="/gallery?mode=image&style=neon" className="hidden text-sm font-semibold text-slate-800 hover:underline sm:inline">
-              See more in Gallery →
-            </Link>
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {SHOWCASE.slice(0, 9).map((s, idx) => (
-              <Link
-                key={`${s.title}-${idx}`}
-                href={s.href}
-                className="group relative overflow-hidden rounded-2xl border border-black/5 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-              >
-                <div className="absolute left-3 top-3 z-10">
-                  <OverlayChip text={s.badge} />
-                </div>
-
-                <div className="aspect-[4/5] w-full overflow-hidden bg-black/[0.02]">
-                  <img src={s.src} alt={s.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
-                </div>
-
-                <div className="px-4 pb-4 pt-3">
-                  <div className="text-sm font-semibold text-[#0B1220]">{s.title}</div>
-                  <div className="mt-1 text-[12px] text-black/55">{s.caption}</div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="mt-8 flex justify-center sm:hidden">
-            <Link href="/gallery?mode=image&style=neon" className="text-sm font-semibold text-slate-800 hover:underline">
-              See more in Gallery →
-            </Link>
-          </div>
-        </section>
-      </main>
-    </StudioGradientShell>
+        </div>
+      </section>
+      <section className="mx-auto max-w-5xl px-6 pb-24 sm:px-10"><div className="mb-8 text-center"><div className="text-xs font-bold uppercase tracking-[0.25em] text-[#72849A]">Try the workspace</div><h2 className="mt-3 text-3xl font-extrabold tracking-tight text-[#0C1A2C] sm:text-4xl">Bring your next idea to life.</h2></div><GeneratorPreviewCard /></section>
+    </main>
   );
 }
