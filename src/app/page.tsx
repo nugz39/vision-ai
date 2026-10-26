@@ -2,10 +2,10 @@ import Link from "next/link";
 import GeneratorPreviewCard from "@/components/ui/GeneratorPreviewCard";
 
 const gallery = [
-  { src: "/assets/vision-ai-new/cinematic-car.webp", title: "Creative campaigns", tag: "Image" },
-  { src: "/assets/vision-ai-new/astronaut.webp", title: "Cinematic stories", tag: "Video" },
-  { src: "/assets/vision-ai-new/mountain-cabin.webp", title: "Beautiful environments", tag: "Image" },
-  { src: "/assets/vision-ai-new/fantasy-world.webp", title: "Editorial visions", tag: "Remix" },
+  { src: "/assets/gallery/prompt-07.png", title: "Creative campaigns", tag: "Image" },
+  { src: "/assets/gallery/prompt-09.png", title: "Cinematic stories", tag: "Video" },
+  { src: "/assets/gallery/prompt-06.png", title: "Beautiful environments", tag: "Image" },
+  { src: "/assets/gallery/prompt-04.png", title: "Editorial visions", tag: "Remix" },
 ];
 const tools = [
   { icon: "▧", title: "Images", desc: "Turn a written idea into distinctive, polished visuals.", href: "/studio?mode=image", color: "text-[#366AD4]" },
@@ -42,12 +42,12 @@ export default function Page() {
             <div aria-hidden="true" className="absolute -inset-5 rounded-full bg-gradient-to-tr from-[#0DA6CF]/20 to-[#9B59DA]/30 blur-3xl" />
             <div className="relative grid grid-cols-2 gap-3 [transform:rotate(-2deg)] sm:gap-4">
               <div className="space-y-3 pt-10 sm:space-y-4">
-                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/vision-ai-new/cinematic-car.webp" alt="Creative image example" className="aspect-[4/5] w-full object-cover" /><span className="absolute bottom-3 left-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold backdrop-blur">Images</span></div>
-                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/vision-ai-new/mountain-cabin.webp" alt="Creative landscape example" className="aspect-[5/4] w-full object-cover" /></div>
+                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/gallery/prompt-07.png" alt="Creative image example" className="aspect-[4/5] w-full object-cover" /><span className="absolute bottom-3 left-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold backdrop-blur">Images</span></div>
+                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/gallery/prompt-06.png" alt="Creative landscape example" className="aspect-[5/4] w-full object-cover" /></div>
               </div>
               <div className="space-y-3 sm:space-y-4">
-                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/vision-ai-new/astronaut.webp" alt="Cinematic creative example" className="aspect-[5/4] w-full object-cover" /><span className="absolute bottom-3 right-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold backdrop-blur">Video</span></div>
-                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/vision-ai-new/fantasy-world.webp" alt="Artistic portrait example" className="aspect-[4/5] w-full object-cover" /><span className="absolute bottom-3 right-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold backdrop-blur">Remix</span></div>
+                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/gallery/prompt-09.png" alt="Cinematic creative example" className="aspect-[5/4] w-full object-cover" /><span className="absolute bottom-3 right-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold backdrop-blur">Video</span></div>
+                <div className="relative overflow-hidden rounded-[1.6rem] border border-white/20 shadow-2xl"><img src="/assets/gallery/prompt-04.png" alt="Artistic portrait example" className="aspect-[4/5] w-full object-cover" /><span className="absolute bottom-3 right-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold backdrop-blur">Remix</span></div>
               </div>
             </div>
           </div>
