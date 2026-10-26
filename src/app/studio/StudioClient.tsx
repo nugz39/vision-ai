@@ -40,8 +40,8 @@ function Tab({ active, children, onClick }: { active?: boolean; children: React.
       style={{
         border: "1px solid rgba(151,183,228,0.18)",
         background: active
-          ? "linear-gradient(120deg,rgba(0,242,255,0.20),rgba(203,47,255,0.16),rgba(123,44,255,0.14))"
-          : "rgba(255,255,255,0.80)",
+          ? "linear-gradient(110deg,rgba(8,126,172,.48),rgba(113,64,182,.48))"
+          : "rgba(18,37,59,0.90)",
         boxShadow: active ? "0 10px 24px rgba(2,6,23,0.08)" : undefined,
       }}
     >
@@ -61,7 +61,7 @@ function Chip({ active, children, onClick }: { active?: boolean; children: React
       )}
       style={{
         border: active ? "1px solid rgba(61,151,220,0.45)" : "1px solid rgba(151,183,228,0.18)",
-        background: active ? "rgba(0,242,255,0.10)" : "rgba(255,255,255,0.80)",
+        background: active ? "rgba(43,117,183,0.34)" : "rgba(18,37,59,0.90)",
       }}
     >
       {children}
