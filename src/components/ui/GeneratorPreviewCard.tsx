@@ -83,12 +83,12 @@ export default function GeneratorPreviewCard({ className }: Props) {
 
   return (
     <div className={cn("mx-auto w-full max-w-6xl", className)}>
-      <div className="relative overflow-hidden rounded-3xl border border-black/5 bg-white/80 shadow-sm">
+      <div className="relative overflow-hidden rounded-[1.8rem] border border-white/15 bg-[#101F32] shadow-[0_20px_65px_rgba(0,0,0,.22)]">
         {/* pastel wash behind card (no left purple line) */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(0,242,255,0.10),rgba(201,49,253,0.07),rgba(132,44,254,0.07))]" />
-          <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#13DFFF]/14 blur-3xl" />
-          <div className="absolute -right-28 -bottom-28 h-72 w-72 rounded-full bg-[#C931FD]/12 blur-3xl" />
+          <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(16,112,162,0.09),rgba(89,53,160,0.09))]" />
+          <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#2D83B8]/10 blur-3xl" />
+          <div className="absolute -right-28 -bottom-28 h-72 w-72 rounded-full bg-[#7252B7]/10 blur-3xl" />
         </div>
 
         <div className="relative p-6 sm:p-8">
@@ -104,15 +104,15 @@ export default function GeneratorPreviewCard({ className }: Props) {
             />
 
             <div>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/55">Prompt</div>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#AFC2D7]">Prompt</div>
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Describe what you want to generate…"
-                className="mt-3 w-full rounded-2xl border border-black/10 bg-white/85 p-4 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-black/10 focus:ring-4 focus:ring-[#842CFE]/10"
+                className="mt-3 w-full rounded-2xl border border-white/15 bg-[#091728] p-4 text-sm text-white shadow-sm outline-none placeholder:text-[#8297AE] focus:border-black/10 focus:ring-4 focus:ring-[#842CFE]/10"
                 rows={4}
               />
-              <div className="mt-2 text-xs text-black/50">
+              <div className="mt-2 text-xs text-[#AFC2D7]">
                 Tip: be specific about subject, lighting, composition, and style.
               </div>
               {error ? <div className="mt-2 text-xs font-semibold text-[#842CFE]">{error}</div> : null}
@@ -125,8 +125,8 @@ export default function GeneratorPreviewCard({ className }: Props) {
               </BluePurpleButton>
             </div>
 
-            <div className="mt-2 overflow-hidden rounded-2xl border border-black/5 bg-white/70 shadow-sm">
-              <div className="aspect-[16/9] w-full bg-black/[0.02]">
+            <div className="mt-2 overflow-hidden rounded-2xl border border-white/15 bg-[#091728] shadow-sm">
+              <div className="aspect-[16/9] w-full bg-[#07111F]">
                 {loading ? (
                   <div className="h-full w-full animate-pulse bg-[linear-gradient(90deg,rgba(19,223,255,0.08),rgba(201,49,253,0.06),rgba(132,44,254,0.06))]" />
                 ) : resultUrl ? (
@@ -136,7 +136,7 @@ export default function GeneratorPreviewCard({ className }: Props) {
                     <img src={resultUrl} alt="Generated preview output" className="h-full w-full object-contain" />
                   )
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-sm text-black/45">
+                  <div className="flex h-full w-full items-center justify-center text-sm text-[#AFC2D7]">
                     Your preview will appear here
                   </div>
                 )}
@@ -148,7 +148,7 @@ export default function GeneratorPreviewCard({ className }: Props) {
                 </div>
                 <Link
                   href={studioHref}
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-black/10 bg-white px-5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 hover:shadow-md"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-white/20 bg-[#152A44] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#203A58] hover:shadow-md"
                 >
                   Open in Studio
                 </Link>
