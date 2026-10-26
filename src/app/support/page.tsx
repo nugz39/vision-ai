@@ -15,7 +15,7 @@ export default function SupportPage(){
  const [open,setOpen]=useState<number|null>(null);
  const filtered=useMemo(()=>faqs.filter(f=>(f.q+" "+f.a).toLowerCase().includes(query.toLowerCase())),[query]);
  return <main className="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
-   <p className="text-xs font-bold uppercase tracking-[.22em] text-[#7CB6E4]">We're here to help</p>
+   <p className="text-xs font-bold uppercase tracking-[.22em] text-[#7CB6E4]">We&apos;re here to help</p>
    <h1 className="mt-3 text-4xl font-extrabold tracking-[-.05em] text-white sm:text-6xl">Support &amp; answers.</h1>
    <p className="mt-4 max-w-2xl text-base leading-7 text-[#B2C4D8]">Find clear answers about the Vision AI workspace and its current capabilities.</p>
    <div className="mt-10 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
