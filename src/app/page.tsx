@@ -18,7 +18,7 @@ const secondary = "inline-flex min-h-14 items-center justify-center rounded-full
 
 export default function Page() {
   return (
-    <main className="bg-[#F8FAFD]">
+    <main className="bg-[#081321]">
       <section className="relative isolate overflow-hidden bg-[#07111F] text-white">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_90%_35%,rgba(100,55,178,0.42),transparent_45%),radial-gradient(ellipse_at_62%_65%,rgba(0,132,187,0.25),transparent_55%)]" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 pb-12 pt-16 sm:px-10 sm:pt-24 lg:min-h-[650px] lg:grid-cols-[1.04fr_0.96fr] lg:gap-6 lg:py-20">
@@ -55,10 +55,10 @@ export default function Page() {
       </section>
 
       <section className="mx-auto max-w-7xl px-6 py-20 sm:px-10">
-        <div className="mb-9"><div className="text-xs font-bold uppercase tracking-[0.25em] text-[#698097]">Everything in one place</div><h2 className="mt-3 text-3xl font-extrabold tracking-[-0.045em] text-[#0C1A2C] sm:text-5xl">Create without the complexity.</h2></div>
+        <div className="mb-9"><div className="text-xs font-bold uppercase tracking-[0.25em] text-[#8CB6DE]">Everything in one place</div><h2 className="mt-3 text-3xl font-extrabold tracking-[-0.045em] text-white sm:text-5xl">Create without the complexity.</h2></div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {tools.map(t => <Link key={t.title} href={t.href} className="group rounded-[1.6rem] border border-[#E8ECF4] bg-white p-7 shadow-[0_10px_35px_rgba(24,45,78,0.04)] transition hover:-translate-y-1 hover:shadow-xl">
-            <div className={`text-4xl font-bold ${t.color}`}>{t.icon}</div><h3 className="mt-7 text-xl font-bold text-[#0D2036]">{t.title}</h3><p className="mt-3 min-h-16 text-sm leading-relaxed text-[#667589]">{t.desc}</p><span className="mt-5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#E0E6EF] text-[#346EAA] transition group-hover:bg-[#EAF4FC]">→</span>
+          {tools.map(t => <Link key={t.title} href={t.href} className="group rounded-[1.6rem] border border-white/15 bg-[#101F32] p-7 shadow-[0_10px_35px_rgba(0,0,0,0.12)] transition hover:-translate-y-1 hover:shadow-xl">
+            <div className={`text-4xl font-bold ${t.color}`}>{t.icon}</div><h3 className="mt-7 text-xl font-bold text-white">{t.title}</h3><p className="mt-3 min-h-16 text-sm leading-relaxed text-[#AFC2D7]">{t.desc}</p><span className="mt-5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-[#A4C9F4] transition group-hover:bg-white/10">→</span>
           </Link>)}
         </div>
       </section>
@@ -68,11 +68,11 @@ export default function Page() {
           {gallery.map(g => <div key={g.title} className="group relative overflow-hidden rounded-[1.4rem]"><img src={g.src} alt={g.title} className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105" /><span className="absolute bottom-3 left-3 rounded-full bg-[#07111F]/80 px-3 py-1 text-xs font-semibold text-white backdrop-blur">{g.tag}</span></div>)}
         </div>
         <div className="lg:pl-10">
-          <div className="text-xs font-bold uppercase tracking-[0.24em] text-[#72849A]">Built for creators and businesses</div>
-          <h2 className="mt-4 text-4xl font-extrabold leading-[1.08] tracking-[-0.05em] text-[#0D1C30] sm:text-5xl">Professional results.<br />Made simple.</h2>
-          <p className="mt-6 text-base leading-[1.85] text-[#607287]">Whether you are creating content, building a brand or exploring something new, Vision AI brings your ideas to life with a focused creative workspace.</p>
-          <ul className="mt-7 space-y-4 text-sm font-medium text-[#273C52]"><li>✧ Explore distinct visual styles</li><li>◇ Create for campaigns, stories and personal projects</li><li>✦ Refine ideas with flexible creative controls</li><li>∞ Move between image and video workflows</li></ul>
-          <Link href="/studio" className="mt-9 inline-flex min-h-12 items-center justify-center rounded-full border border-[#C9D5E3] bg-white px-7 text-sm font-bold text-[#15314C] transition hover:bg-[#EAF2FA]">Explore the Studio →</Link>
+          <div className="text-xs font-bold uppercase tracking-[0.24em] text-[#8CB6DE]">Built for creators and businesses</div>
+          <h2 className="mt-4 text-4xl font-extrabold leading-[1.08] tracking-[-0.05em] text-white sm:text-5xl">Professional results.<br />Made simple.</h2>
+          <p className="mt-6 text-base leading-[1.85] text-[#AFC2D7]">Whether you are creating content, building a brand or exploring something new, Vision AI brings your ideas to life with a focused creative workspace.</p>
+          <ul className="mt-7 space-y-4 text-sm font-medium text-[#D5E3F2]"><li>✧ Explore distinct visual styles</li><li>◇ Create for campaigns, stories and personal projects</li><li>✦ Refine ideas with flexible creative controls</li><li>∞ Move between image and video workflows</li></ul>
+          <Link href="/studio" className="mt-9 inline-flex min-h-12 items-center justify-center rounded-full border border-white/20 bg-[#152A44] px-7 text-sm font-bold text-white transition hover:bg-[#203A58]">Explore the Studio →</Link>
         </div>
       </section>
 
@@ -85,7 +85,7 @@ export default function Page() {
           </div>
         </div>
       </section>
-      <section className="mx-auto max-w-5xl px-6 pb-24 sm:px-10"><div className="mb-8 text-center"><div className="text-xs font-bold uppercase tracking-[0.25em] text-[#72849A]">Try the workspace</div><h2 className="mt-3 text-3xl font-extrabold tracking-tight text-[#0C1A2C] sm:text-4xl">Bring your next idea to life.</h2></div><GeneratorPreviewCard /></section>
+      <section className="mx-auto max-w-5xl px-6 pb-24 sm:px-10"><div className="mb-8 text-center"><div className="text-xs font-bold uppercase tracking-[0.25em] text-[#8CB6DE]">Try the workspace</div><h2 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Bring your next idea to life.</h2></div><GeneratorPreviewCard /></section>
     </main>
   );
 }
