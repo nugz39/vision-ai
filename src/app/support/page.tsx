@@ -1,126 +1,33 @@
 "use client";
+import { useMemo, useState } from "react";
+import Link from "next/link";
 
-import React, { useMemo, useState } from "react";
-import { NbButton } from "@/components/ui/NbButton";
-
-type FAQ = {
-  q: string;
-  a: string;
-};
-
-const FAQS: FAQ[] = [
-  { q: "How does the free trial work?", a: "You get 3 days of full Studio access. Cancel anytime." },
-  { q: "What’s included in Pro?", a: "Higher credits, faster queues, and priority exports." },
-  { q: "What’s included in Studio?", a: "Max credits, Studio quality presets, and advanced controls." },
-  { q: "Can I cancel anytime?", a: "Yes. You can cancel any time from your account settings." },
-  { q: "Do you support Image, Video, and Remix modes?", a: "Yes — the Studio includes Image generation, Video keyframe direction, and Remix restyling." },
-  { q: "How do credits work?", a: "Credits are consumed per generation depending on mode and quality preset." },
-  { q: "Can I use outputs commercially?", a: "Commercial usage depends on your plan and terms. See Terms for full details." },
-  { q: "Where can I see examples of outputs?", a: "Use the Gallery to explore curated outputs across Image, Video, and Remix." },
+const faqs = [
+  {q:"Can I try image generation?",a:"The Studio includes a preview-generation interface. Generation availability depends on the connected service."},
+  {q:"Does Vision AI support video?",a:"The Studio has a video mode. Output depends on the connected generation backend; video generation is not guaranteed to be available."},
+  {q:"How does Remix work?",a:"Remix is an experimental workflow. Image uploads are not yet sent to the backend, so uploading a reference image does not currently transform that image."},
+  {q:"Are subscriptions and free trials available?",a:"Registration, subscriptions, billing and credit balances are not yet active. Pricing information is provisional until checkout is enabled."},
+  {q:"Where can I explore examples?",a:"Visit the Gallery to browse curated examples of visual styles."},
+  {q:"Can I use outputs commercially?",a:"Usage rights depend on the applicable generation model and its terms. Check those terms before commercial use."}
 ];
-
-function clsx(...xs: Array<string | false | null | undefined>) {
-  return xs.filter(Boolean).join(" ");
-}
-
-export default function SupportPage() {
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState<number | null>(0);
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return FAQS;
-    return FAQS.filter((f) => f.q.toLowerCase().includes(q) || f.a.toLowerCase().includes(q));
-  }, [query]);
-
-  return (
-    <main className="mx-auto max-w-6xl px-4 py-12">
-      <div className="grid gap-6 lg:grid-cols-12">
-        <div className="lg:col-span-7">
-          <div
-            className="rounded-3xl border bg-white/80 p-6 backdrop-blur-md"
-            style={{
-              borderColor: "rgba(2,6,23,0.10)",
-              boxShadow: "0 18px 55px rgba(2,6,23,0.10), 0 0 18px rgba(0,242,255,0.10), 0 0 18px rgba(203,47,255,0.08)",
-            }}
-          >
-            <div className="text-2xl font-semibold tracking-tight text-[#020617]">Support</div>
-            <div className="mt-2 text-sm text-black/55">Search FAQs and get quick answers.</div>
-
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder='Search (e.g. "billing", "trial", "credits")'
-              className="mt-5 w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]"
-              style={{ borderColor: "rgba(2,6,23,0.10)" }}
-            />
-
-            <div className="mt-6 divide-y" style={{ borderColor: "rgba(2,6,23,0.10)" }}>
-              {filtered.map((f, idx) => {
-                const isOpen = open === idx;
-                return (
-                  <div key={f.q} className="py-4">
-                    <button
-                      type="button"
-                      onClick={() => setOpen((v) => (v === idx ? null : idx))}
-                      className={clsx(
-                        "flex w-full items-center justify-between gap-4 text-left",
-                        "text-sm font-semibold text-[#020617]"
-                      )}
-                    >
-                      <span>{f.q}</span>
-                      <span className="text-black/55">{isOpen ? "−" : "+"}</span>
-                    </button>
-                    {isOpen && (
-                      <div className="mt-2 text-sm leading-relaxed text-black/55">{f.a}</div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        <div className="lg:col-span-5">
-          <div
-            className="rounded-3xl border p-6 backdrop-blur-md"
-            style={{
-              borderColor: "rgba(2,6,23,0.10)",
-              background:
-                "radial-gradient(circle at 25% 25%, rgba(0,242,255,0.14), transparent 55%), radial-gradient(circle at 70% 30%, rgba(203,47,255,0.12), transparent 58%), rgba(255,255,255,0.78)",
-              boxShadow: "0 18px 55px rgba(2,6,23,0.10), 0 0 18px rgba(0,242,255,0.10), 0 0 18px rgba(203,47,255,0.08)",
-            }}
-          >
-            <div className="text-lg font-semibold text-[#020617]">Contact</div>
-            <div className="mt-2 text-sm text-black/55">Send a message and we’ll get back to you.</div>
-
-            <div className="mt-5 grid gap-3">
-              <input
-                className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]"
-                style={{ borderColor: "rgba(2,6,23,0.10)" }}
-                placeholder="Email"
-              />
-              <input
-                className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]"
-                style={{ borderColor: "rgba(2,6,23,0.10)" }}
-                placeholder="Subject"
-              />
-              <textarea
-                rows={5}
-                className="w-full resize-none rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]"
-                style={{ borderColor: "rgba(2,6,23,0.10)" }}
-                placeholder="Message"
-              />
-            </div>
-
-            <div className="mt-5">
-              <NbButton variant="primary" size="lg" fullWidth onClick={() => {}}>
-                Send message
-              </NbButton>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  );
+export default function SupportPage(){
+ const [query,setQuery]=useState("");
+ const [open,setOpen]=useState<number|null>(null);
+ const filtered=useMemo(()=>faqs.filter(f=>(f.q+" "+f.a).toLowerCase().includes(query.toLowerCase())),[query]);
+ return <main className="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
+   <p className="text-xs font-bold uppercase tracking-[.22em] text-[#7CB6E4]">We're here to help</p>
+   <h1 className="mt-3 text-4xl font-extrabold tracking-[-.05em] text-white sm:text-6xl">Support &amp; answers.</h1>
+   <p className="mt-4 max-w-2xl text-base leading-7 text-[#B2C4D8]">Find clear answers about the Vision AI workspace and its current capabilities.</p>
+   <div className="mt-10 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+     <section className="rounded-[1.8rem] border border-white/15 bg-[#101F32] p-6 sm:p-8">
+       <label htmlFor="faq-search" className="text-xs font-bold uppercase tracking-[.15em] text-[#AFC2D7]">Search questions</label>
+       <input id="faq-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search topics..." className="mt-3 w-full rounded-xl border border-white/15 bg-[#081626] px-4 py-4 text-white outline-none placeholder:text-[#8195AD] focus:border-[#4B91CF]" />
+       <div className="mt-6 divide-y divide-white/10">{filtered.map((f,i)=><div key={f.q} className="py-5"><button type="button" onClick={()=>setOpen(open===i?null:i)} className="flex w-full items-center justify-between gap-4 text-left text-[15px] font-semibold text-white"><span>{f.q}</span><span className="text-[#8BBBE9]">{open===i?"−":"+"}</span></button>{open===i&&<p className="mt-3 text-sm leading-7 text-[#B2C4D8]">{f.a}</p>}</div>)}{filtered.length===0&&<p className="py-6 text-sm text-[#B2C4D8]">No matching questions.</p>}</div>
+     </section>
+     <aside className="h-fit overflow-hidden rounded-[1.8rem] border border-white/15 bg-[#101F32]">
+       <img src="/assets/vision-ai-new/astronaut.webp" alt="Cinematic astronaut artwork" className="aspect-[16/10] w-full object-cover"/>
+       <div className="p-7"><h2 className="text-2xl font-bold text-white">Explore what’s possible.</h2><p className="mt-3 text-sm leading-7 text-[#B2C4D8]">Discover creative examples or open the Studio to explore its tools.</p><Link href="/gallery" className="mt-6 inline-flex rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">Explore gallery →</Link></div>
+     </aside>
+   </div>
+ </main>
 }
