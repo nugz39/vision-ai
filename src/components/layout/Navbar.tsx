@@ -23,13 +23,14 @@ function clsx(...xs: Array<string | false | null | undefined>) {
 function NavLink({ href, label }: NavItem) {
   const pathname = usePathname();
   const active = pathname === href;
+  const onHome = pathname === "/";
 
   return (
     <Link
       href={href}
       className={clsx(
         "relative rounded-full px-3 py-2 text-[12px] font-semibold transition-colors",
-        active ? "text-[#020617]" : "text-black/55 hover:text-[#020617]"
+        onHome ? (active ? "text-white" : "text-white/75 hover:text-white") : (active ? "text-[#020617]" : "text-black/55 hover:text-[#020617]")
       )}
     >
       {label}
@@ -51,6 +52,7 @@ function NavLink({ href, label }: NavItem) {
 
 function NavbarImpl() {
   const router = useRouter();
+  const onHome = usePathname() === "/";
   const [open, setOpen] = useState(false);
 
   // Per your request: top-right CTA always "Free trial" → /pricing, keep same green→cyan background
@@ -58,7 +60,7 @@ function NavbarImpl() {
 
   return (
     <header
-      className="sticky top-0 z-30 border-b bg-white/90 backdrop-blur-xl"
+      className={onHome ? "sticky top-0 z-30 border-b border-white/10 bg-[#07111F] text-white" : "sticky top-0 z-30 border-b bg-white/90 backdrop-blur-xl"}
       style={{ borderColor: "rgba(2,6,23,0.10)" }}
     >
       <div className="mx-auto max-w-7xl px-5 py-4 sm:px-6">
@@ -71,7 +73,7 @@ function NavbarImpl() {
             className="flex items-center gap-3"
           >
             <img src={NB_BRAND_LOGO_SRC} alt="" className="h-11 w-11 rounded-xl object-contain sm:h-12 sm:w-12" />
-            <span className="text-[21px] font-extrabold tracking-[-0.06em] text-[#0B1D34] sm:text-2xl">Vision <span className="bg-gradient-to-r from-[#13A7CD] to-[#803AE8] bg-clip-text text-transparent">AI</span></span>
+            <span className={onHome ? "text-[21px] font-extrabold tracking-[-0.06em] text-white sm:text-2xl" : "text-[21px] font-extrabold tracking-[-0.06em] text-[#0B1D34] sm:text-2xl"}>Vision <span className="bg-gradient-to-r from-[#47D4D7] to-[#B48BEE] bg-clip-text text-transparent">AI</span></span>
           </button>
 
           {/* Right: wordmark next to Studio + nav + CTA */}
@@ -81,7 +83,7 @@ function NavbarImpl() {
                 <NavLink key={n.href} {...n} />
               ))}
               <div className="ml-2">
-                <NbButton variant="studio" size="md" onClick={() => router.push(cta.href)}>
+                <NbButton variant="primary" size="md" onClick={() => router.push(cta.href)}>
                   {cta.label}
                 </NbButton>
               </div>
@@ -95,7 +97,7 @@ function NavbarImpl() {
               <button
                 type="button"
                 onClick={() => setOpen((v) => !v)}
-                className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-[#12253D] shadow-sm"
+                className={onHome ? "rounded-2xl border border-white/25 bg-white/10 px-4 py-3 text-sm font-semibold text-white" : "rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-[#12253D] shadow-sm"}
                 style={{ borderColor: "rgba(2,6,23,0.12)" }}
               >
                 {open ? "Close" : "Menu"}
@@ -106,7 +108,7 @@ function NavbarImpl() {
 
         {open && (
           <div
-            className="mt-3 rounded-2xl border bg-white/80 p-2 backdrop-blur-md md:hidden"
+            className={onHome ? "mt-3 rounded-2xl border border-white/15 bg-[#101D2E] p-2 md:hidden" : "mt-3 rounded-2xl border bg-white/80 p-2 backdrop-blur-md md:hidden"}
             style={{ borderColor: "rgba(2,6,23,0.10)" }}
           >
             {NAV.map((n) => (
@@ -114,7 +116,7 @@ function NavbarImpl() {
                 key={n.href}
                 href={n.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-xl px-3 py-2 text-sm font-semibold text-[#020617] hover:bg-black/[0.04]"
+                className={onHome ? "block rounded-xl px-3 py-2 text-sm font-semibold text-white hover:bg-white/10" : "block rounded-xl px-3 py-2 text-sm font-semibold text-[#020617] hover:bg-black/[0.04]"}
               >
                 {n.label}
               </Link>
