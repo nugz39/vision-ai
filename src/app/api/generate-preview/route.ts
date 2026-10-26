@@ -24,14 +24,14 @@ function getPreviewUrl(mode: PreviewMode): string {
   if (mode === "video") {
     return (
       process.env.VISION_AI_VIDEO_API ??
-      ${BACKEND_BASE}/generate_video
+      `${BACKEND_BASE}/generate_video`
     );
   }
 
   // image + remix share the same text->image endpoint for now
   return (
     process.env.VISION_AI_GENERATE_API ??
-    ${BACKEND_BASE}/generate
+    `${BACKEND_BASE}/generate`
   );
 }
 
