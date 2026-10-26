@@ -77,55 +77,46 @@ const supportGradientBtn =
 export default function Page() {
   return (
     <StudioGradientShell>
-      <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-14">
-        {/* HERO */}
-        <section className="grid items-center gap-8 lg:grid-cols-2">
-          <div className="mx-auto w-full max-w-xl text-center lg:text-left">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/55">
-              PREMIUM MULTI-MODAL AI STUDIO
+      <main className="mx-auto w-full max-w-7xl px-4 pb-16 pt-5 sm:px-6 sm:pt-8">
+        {/* HERO — mobile-first editorial layout */}
+        <section className="relative isolate overflow-hidden rounded-[2rem] bg-[radial-gradient(ellipse_at_90%_12%,rgba(180,149,255,0.22),transparent_50%),radial-gradient(ellipse_at_5%_60%,rgba(0,205,229,0.12),transparent_55%),#F9FBFF] px-5 pb-8 pt-16 sm:px-10 sm:pt-20 lg:px-14 lg:py-24">
+          <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+            <div className="max-w-[680px]">
+              <div className="inline-flex items-center rounded-full border border-[#9BDAE3]/70 bg-[#E7FAF9]/75 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] text-[#267E85] sm:text-xs">
+                YOUR CREATIVE AI STUDIO
+              </div>
+              <h1 className="mt-8 text-[clamp(3.25rem,8.5vw,6.1rem)] font-extrabold leading-[0.99] tracking-[-0.065em] text-[#081A30]">
+                Your ideas.
+                <br />
+                <span className="bg-gradient-to-r from-[#129BDF] via-[#20B5CE] to-[#7E38E8] bg-clip-text text-transparent">Without limits.</span>
+              </h1>
+              <p className="mt-7 max-w-[590px] text-[17px] leading-[1.75] text-[#526578] sm:text-xl">
+                Create striking images, explore cinematic video and shape your next idea in one intuitive AI workspace.
+              </p>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Link href="/studio" className="inline-flex min-h-14 items-center justify-center rounded-full bg-gradient-to-r from-[#0E9DE5] via-[#16B9D2] to-[#8437E7] px-8 text-base font-bold text-white shadow-[0_12px_32px_rgba(18,151,199,0.22)] transition hover:-translate-y-0.5 hover:shadow-xl">
+                  Start creating <span aria-hidden="true" className="ml-2">→</span>
+                </Link>
+                <Link href="/gallery" className="inline-flex min-h-14 items-center justify-center rounded-full border border-[#D5DDE6] bg-white px-8 text-base font-bold text-[#13243B] shadow-sm transition hover:bg-slate-50">
+                  Explore the gallery
+                </Link>
+              </div>
+              <p className="mt-7 text-sm leading-relaxed text-[#607386]">One creative space for images, motion and fresh perspectives.</p>
             </div>
-
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0B1220] sm:text-5xl lg:text-6xl">
-              Build premium
-              <br />
-              visuals in minutes.
-            </h1>
-
-            <p className="mt-4 text-sm leading-relaxed text-black/55 sm:text-base">
-              Vision AI Studio is a clean, fast workflow for images, video keyframes and remixes—built for creators who ship.
-            </p>
-
-            <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
-              <Link href="/studio" className={supportGradientBtn}>
-                Open Studio
-              </Link>
-              <Link
-                href="/pricing"
-                className="inline-flex h-11 items-center justify-center rounded-full border border-black/10 bg-white px-5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 hover:shadow-md"
-              >
-                View pricing
-              </Link>
+            <div className="relative">
+              <div className="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-br from-[#35C5E0]/15 to-[#AF70F5]/15 blur-2xl" aria-hidden="true" />
+              <div className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/70 p-2 shadow-[0_25px_70px_rgba(22,41,81,0.14)]">
+                <div className="relative aspect-[4/4.3] overflow-hidden rounded-[1.5rem] sm:aspect-[5/4] lg:aspect-[4/5]">
+                  <img src="/assets/branding/hero-panel.png" alt="Abstract luminous visual created for Vision AI" className="h-full w-full object-cover" />
+                  <div className="absolute bottom-4 left-4 rounded-full border border-white/50 bg-white/85 px-4 py-2 text-xs font-bold tracking-wide text-[#203149] shadow-sm backdrop-blur-md">Imagine · Create · Refine</div>
+                </div>
+              </div>
             </div>
-
-            <div className="mt-3 text-center text-xs font-semibold text-black/55 sm:text-left">
-              No calls. No meetings. Cancel anytime.
-            </div>
-          </div>
-
-          {/* HERO IMAGE PANEL (same size as before) */}
-          <div className="relative mx-auto h-[340px] w-full max-w-xl overflow-hidden rounded-3xl border border-black/5 bg-white/60 shadow-sm">
-            <img
-              src="/assets/branding/hero-panel.png"
-              alt="Vision AI hero visual"
-              className="h-full w-full object-cover"
-            />
-            {/* keep a *very* soft wash so it still feels on-brand */}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,rgba(19,223,255,0.08),rgba(201,49,253,0.06),rgba(132,44,254,0.06))]" />
           </div>
         </section>
 
         {/* MODES */}
-        <section className="mt-14">
+        <section className="mt-20">
           <div className="text-center">
             <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/55">Modes</div>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#0B1220] sm:text-4xl">
