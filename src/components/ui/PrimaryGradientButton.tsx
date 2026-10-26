@@ -28,7 +28,7 @@ export default function PrimaryGradientButton({
         "relative inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold tracking-[0.01em] text-white",
         "transition-transform duration-150 ease-out will-change-transform",
         // Vision AI gradient (exact)
-        "bg-[linear-gradient(90deg,#00F2FF,#7AF63C,#CB2FFF)]",
+        "bg-[linear-gradient(110deg,#087EAC,#2469B7,#7140B6)]",
         // glow ring + hover / active behavior
         "shadow-[0_12px_30px_rgba(203,47,255,0.18)]",
         "hover:scale-[1.02] hover:shadow-[0_16px_40px_rgba(0,242,255,0.20)] hover:brightness-[1.03]",
