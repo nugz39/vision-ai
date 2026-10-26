@@ -21,6 +21,10 @@ export default function GeneratorPreviewCard({ className }: Props) {
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [resultUrl, setResultUrl] = React.useState<string | null>(null);
+  const [resultType, setResultType] = React.useState<"image" | "video">("image");
+  const resultObjectUrl = React.useRef<string | null>(null);
+
+  React.useEffect(() => () => { if (resultObjectUrl.current) URL.revokeObjectURL(resultObjectUrl.current); }, []);
 
   const modeLabel = mode === "image" ? "Text → Image" : mode === "video" ? "Text → Video" : "Remix";
   const trimmed = prompt.trim();
@@ -33,6 +37,8 @@ export default function GeneratorPreviewCard({ className }: Props) {
     }
 
     setLoading(true);
+    if (resultObjectUrl.current) URL.revokeObjectURL(resultObjectUrl.current);
+    resultObjectUrl.current = null;
     setResultUrl(null);
 
     try {
@@ -42,12 +48,32 @@ export default function GeneratorPreviewCard({ className }: Props) {
         body: JSON.stringify({ mode, prompt: trimmed }),
       });
 
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; imageUrl?: string; error?: string };
-      if (!res.ok || data.ok === false) throw new Error(data.error || "Bad response");
-
-      setResultUrl(data.imageUrl || "/assets/gallery/prompt-01.png");
-    } catch {
-      setError("Something went wrong. Please try again.");
+      const contentType = res.headers.get("content-type") || "";
+      if (!res.ok) {
+        const message = contentType.includes("application/json")
+          ? (await res.json().catch(() => null))?.error
+          : null;
+        throw new Error(typeof message === "string" ? message : "Generation failed");
+      }
+      if (contentType.startsWith("image/") || contentType.startsWith("video/")) {
+        const blob = await res.blob();
+        if (!blob.size) throw new Error("Empty generation response");
+        const objectUrl = URL.createObjectURL(blob);
+        resultObjectUrl.current = objectUrl;
+        setResultType(contentType.startsWith("video/") ? "video" : "image");
+        setResultUrl(objectUrl);
+      } else if (contentType.includes("application/json")) {
+        const data = await res.json() as { imageUrl?: string; videoUrl?: string; error?: string; ok?: boolean };
+        if (data.ok === false || data.error) throw new Error(data.error || "Generation failed");
+        const url = data.videoUrl || data.imageUrl;
+        if (!url || !/^https:\/\//i.test(url)) throw new Error("Backend did not return a usable media URL");
+        setResultType(data.videoUrl ? "video" : "image");
+        setResultUrl(url);
+      } else {
+        throw new Error("Unsupported generation response");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -104,7 +130,11 @@ export default function GeneratorPreviewCard({ className }: Props) {
                 {loading ? (
                   <div className="h-full w-full animate-pulse bg-[linear-gradient(90deg,rgba(19,223,255,0.08),rgba(201,49,253,0.06),rgba(132,44,254,0.06))]" />
                 ) : resultUrl ? (
-                  <img src={resultUrl} alt="Preview output" className="h-full w-full object-cover" />
+                  resultType === "video" ? (
+                    <video src={resultUrl} controls playsInline className="h-full w-full object-contain" />
+                  ) : (
+                    <img src={resultUrl} alt="Generated preview output" className="h-full w-full object-contain" />
+                  )
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-sm text-black/45">
                     Your preview will appear here
