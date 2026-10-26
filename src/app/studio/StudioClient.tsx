@@ -126,6 +126,9 @@ export default function StudioClient() {
   const [genLoading, setGenLoading] = useState(false);
   const [genError, setGenError] = useState<string | null>(null);
   const [outputUrl, setOutputUrl] = useState<string | null>(null);
+  const [outputType, setOutputType] = useState<"image" | "video">("image");
+  const objectUrlRef = useRef<string | null>(null);
+  useEffect(() => () => { if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current); }, []);
 
   const canGenerate = useMemo(() => {
     if (mode === "remix") return uploadName.length > 0 || prompt.trim().length > 0;
@@ -134,6 +137,8 @@ export default function StudioClient() {
 
   async function onGenerate() {
     setGenError(null);
+    if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    objectUrlRef.current = null;
     setOutputUrl(null);
 
     // validate
@@ -182,10 +187,28 @@ export default function StudioClient() {
         body: JSON.stringify(body),
       });
 
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; imageUrl?: string; error?: string };
-      if (!res.ok || data.ok === false) throw new Error(data.error || "Generation failed");
-
-      setOutputUrl(data.imageUrl || "/assets/gallery/prompt-01.png");
+      const contentType = res.headers.get("content-type") || "";
+      if (!res.ok) {
+        const data = contentType.includes("application/json") ? await res.json().catch(() => null) : null;
+        throw new Error(typeof data?.error === "string" ? data.error : "Generation failed");
+      }
+      if (contentType.startsWith("image/") || contentType.startsWith("video/")) {
+        const blob = await res.blob();
+        if (!blob.size) throw new Error("Empty generation response");
+        const url = URL.createObjectURL(blob);
+        objectUrlRef.current = url;
+        setOutputType(contentType.startsWith("video/") ? "video" : "image");
+        setOutputUrl(url);
+      } else if (contentType.includes("application/json")) {
+        const data = await res.json() as { imageUrl?: string; videoUrl?: string; error?: string; ok?: boolean };
+        if (data.ok === false || data.error) throw new Error(data.error || "Generation failed");
+        const url = data.videoUrl || data.imageUrl;
+        if (!url || !/^https:\/\//i.test(url)) throw new Error("No usable media returned");
+        setOutputType(data.videoUrl ? "video" : "image");
+        setOutputUrl(url);
+      } else {
+        throw new Error("Unsupported generation response");
+      }
     } catch (e: any) {
       setGenError(e?.message || "Something went wrong. Please try again.");
     } finally {
@@ -222,13 +245,13 @@ export default function StudioClient() {
               className="rounded-full border bg-white/80 px-3 py-2 text-[12px] font-semibold text-black/55"
               style={{ borderColor: "rgba(2,6,23,0.10)" }}
             >
-              Trial: 3 days remaining
+              Account status unavailable
             </span>
             <span
               className="rounded-full border bg-white/80 px-3 py-2 text-[12px] font-semibold text-black/55"
               style={{ borderColor: "rgba(2,6,23,0.10)" }}
             >
-              Credits: 124 / 200
+              Credit balance unavailable
             </span>
           </div>
         ) : null}
@@ -411,7 +434,11 @@ export default function StudioClient() {
               {genLoading ? (
                 <div className="h-full w-full animate-pulse bg-[linear-gradient(90deg,rgba(19,223,255,0.08),rgba(201,49,253,0.06),rgba(132,44,254,0.06))]" />
               ) : outputUrl ? (
-                <img src={outputUrl} alt="Studio output" className="h-full w-full object-cover" />
+                outputType === "video" ? (
+                  <video src={outputUrl} controls playsInline className="h-full w-full object-contain" />
+                ) : (
+                  <img src={outputUrl} alt="Generated Studio output" className="h-full w-full object-contain" />
+                )
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-sm text-black/45">
                   Output will appear here
