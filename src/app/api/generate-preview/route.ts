@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 type PreviewMode = "image" | "video" | "remix";
 
-interface PreviewRequestBody {
-  mode?: PreviewMode;
-  prompt?: string;
-  width?: number;
-  height?: number;
-  [key: string]: unknown;
-}
+const PreviewSchema = z.object({
+  mode: z.enum(["image", "video", "remix"]).default("image"),
+  prompt: z.string().trim().min(1).max(2000),
+  width: z.number().int().min(256).max(1536).optional(),
+  height: z.number().int().min(256).max(1536).optional(),
+});
 
 const BACKEND_BASE =
   process.env.VISION_AI_BACKEND_BASE ??
@@ -36,18 +36,13 @@ function getPreviewUrl(mode: PreviewMode): string {
 }
 
 export async function POST(req: NextRequest) {
-  let body: PreviewRequestBody;
-
-  try {
-    body = (await req.json()) as PreviewRequestBody;
-  } catch {
-    return NextResponse.json(
-      { error: "Invalid JSON in request body" },
-      { status: 400 }
-    );
+  const json = await req.json().catch(() => null);
+  const parsed = PreviewSchema.safeParse(json);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Enter a valid prompt and generation settings." }, { status: 400 });
   }
-
-  const mode = (body.mode ?? "image") as PreviewMode;
+  const body = parsed.data;
+  const mode: PreviewMode = body.mode;
   const url = getPreviewUrl(mode);
 
   // Build a "preview-safe" payload – smaller + faster
@@ -61,6 +56,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const backendResp = await fetch(url, {
+      signal: AbortSignal.timeout(90000),
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -70,6 +66,10 @@ export async function POST(req: NextRequest) {
     });
 
     const contentType = backendResp.headers.get("content-type") ?? "";
+    if (!backendResp.ok) {
+      console.error("[VISION AI] Preview backend returned", backendResp.status);
+      return NextResponse.json({ error: "Generation service is unavailable. Please try again." }, { status: 502 });
+    }
 
     // Most common: backend returns raw image / webp bytes
     if (contentType.startsWith("image/") || contentType.startsWith("video/")) {
@@ -88,21 +88,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(data, { status: backendResp.status });
     }
 
-    // Fallback: raw proxy
-    const buf = Buffer.from(await backendResp.arrayBuffer());
-    return new NextResponse(buf, {
-      status: backendResp.status,
-      headers: {
-        "content-type": contentType || "application/octet-stream",
-      },
-    });
+    return NextResponse.json({ error: "Generation service returned an unsupported format." }, { status: 502 });
   } catch (err) {
     console.error("[VISION AI] /api/generate-preview error:", err);
     return NextResponse.json(
       {
-        error: "Preview generation error",
-        details:
-          err instanceof Error ? err.message : "Unknown error calling backend",
+        error: "Preview generation failed. Please try again.",
       },
       { status: 502 }
     );
