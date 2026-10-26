@@ -9,7 +9,7 @@ import { NbButton } from "@/components/ui/NbButton";
 type NavItem = { href: string; label: string };
 
 const NAV: NavItem[] = [
-  { href: "/", label: "VISION AI" },
+  { href: "/", label: "Home" },
   { href: "/studio", label: "Studio" },
   { href: "/pricing", label: "Pricing" },
   { href: "/gallery", label: "Gallery" },
@@ -54,23 +54,24 @@ function NavbarImpl() {
   const [open, setOpen] = useState(false);
 
   // Per your request: top-right CTA always "Free trial" → /pricing, keep same green→cyan background
-  const cta = { label: "Free trial", href: "/pricing" };
+  const cta = { label: "Open Studio", href: "/studio" };
 
   return (
     <header
-      className="sticky top-0 z-30 border-b bg-white/70 backdrop-blur-md"
+      className="sticky top-0 z-30 border-b bg-white/90 backdrop-blur-xl"
       style={{ borderColor: "rgba(2,6,23,0.10)" }}
     >
-      <div className="mx-auto max-w-6xl px-4 py-3">
+      <div className="mx-auto max-w-7xl px-5 py-4 sm:px-6">
         <div className="flex items-center justify-between gap-3">
           {/* Left: logo */}
           <button
             type="button"
             onClick={() => router.push("/")}
             aria-label="Vision AI home"
-            className="flex items-center"
+            className="flex items-center gap-3"
           >
-            <img src={NB_BRAND_LOGO_SRC} alt="Vision AI" className="h-10 w-auto" />
+            <img src={NB_BRAND_LOGO_SRC} alt="" className="h-11 w-11 rounded-xl object-contain sm:h-12 sm:w-12" />
+            <span className="text-[21px] font-extrabold tracking-[-0.06em] text-[#0B1D34] sm:text-2xl">Vision <span className="bg-gradient-to-r from-[#13A7CD] to-[#803AE8] bg-clip-text text-transparent">AI</span></span>
           </button>
 
           {/* Right: wordmark next to Studio + nav + CTA */}
@@ -88,16 +89,16 @@ function NavbarImpl() {
 
             {/* Mobile */}
             <div className="flex items-center gap-2 md:hidden">
-              <NbButton variant="studio" size="sm" onClick={() => router.push(cta.href)}>
+              <NbButton variant="studio" size="sm" className="hidden sm:inline-flex" onClick={() => router.push(cta.href)}>
                 {cta.label}
               </NbButton>
               <button
                 type="button"
                 onClick={() => setOpen((v) => !v)}
-                className="rounded-full border bg-white/80 px-3 py-2 text-xs font-semibold text-black/70"
+                className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-[#12253D] shadow-sm"
                 style={{ borderColor: "rgba(2,6,23,0.12)" }}
               >
-                Menu
+                {open ? "Close" : "Menu"}
               </button>
             </div>
           </div>
