@@ -28,8 +28,8 @@ export default function ModeTabs<T extends string>({
 }: Props<T>) {
   const activeClasses =
     activeVariant === "support"
-      ? "border-transparent bg-gradient-to-r from-[#13DFFF] via-[#C931FD] to-[#842CFE] text-white shadow-md hover:shadow-lg hover:brightness-[1.03]"
-      : "border-transparent bg-gradient-to-r from-[#46e6ff] via-[#9b5bff] to-[#ff4fd8] text-white shadow-md hover:shadow-lg hover:brightness-[1.03]";
+      ? "border-transparent bg-gradient-to-r from-[#087EAC] via-[#2469B7] to-[#7140B6] text-white shadow-md hover:shadow-lg hover:brightness-[1.03]"
+      : "border-transparent bg-gradient-to-r from-[#087EAC] via-[#2469B7] to-[#7140B6] text-white shadow-md hover:shadow-lg hover:brightness-[1.03]";
 
   return (
     <div className={cn("flex flex-wrap gap-2", className)}>
@@ -45,7 +45,7 @@ export default function ModeTabs<T extends string>({
               "outline-none focus-visible:ring-4 focus-visible:ring-[#842CFE]/15",
               active
                 ? activeClasses
-                : "border border-black/5 bg-white text-slate-800 shadow-sm hover:bg-slate-50 hover:shadow-md"
+                : "border border-white/15 bg-[#182A40] text-[#D5E5F5] shadow-sm hover:bg-[#243C57]"
             )}
           >
             {opt.label}
