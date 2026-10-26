@@ -23,7 +23,7 @@ function clsx(...xs: Array<string | false | null | undefined>) {
 function NavLink({ href, label }: NavItem) {
   const pathname = usePathname();
   const active = pathname === href;
-  const onHome = pathname === "/";
+  const onHome = true;
 
   return (
     <Link
@@ -43,7 +43,7 @@ function NavLink({ href, label }: NavItem) {
         )}
         style={{
           background:
-            "linear-gradient(120deg,rgba(0,242,255,0.9),rgba(203,47,255,0.9),rgba(123,44,255,0.9))",
+            "linear-gradient(110deg,#087EAC,#2469B7,#7140B6)",
         }}
       />
     </Link>
@@ -52,16 +52,15 @@ function NavLink({ href, label }: NavItem) {
 
 function NavbarImpl() {
   const router = useRouter();
-  const onHome = usePathname() === "/";
+  const onHome = true;
   const [open, setOpen] = useState(false);
 
-  // Per your request: top-right CTA always "Free trial" → /pricing, keep same green→cyan background
   const cta = { label: "Open Studio", href: "/studio" };
 
   return (
     <header
       className={onHome ? "sticky top-0 z-30 border-b border-white/10 bg-[#07111F] text-white" : "sticky top-0 z-30 border-b bg-white/90 backdrop-blur-xl"}
-      style={{ borderColor: "rgba(2,6,23,0.10)" }}
+      
     >
       <div className="mx-auto max-w-7xl px-5 py-4 sm:px-6">
         <div className="flex items-center justify-between gap-3">
@@ -72,7 +71,7 @@ function NavbarImpl() {
             aria-label="Vision AI home"
             className="flex items-center gap-3"
           >
-            <img src={NB_BRAND_LOGO_SRC} alt="" className="h-11 w-11 rounded-xl object-contain sm:h-12 sm:w-12" />
+            <img src={NB_BRAND_LOGO_SRC} alt="" className="h-10 w-10 rounded-full border border-[#348DBF]/40 bg-[#07111F] object-cover object-top sm:h-11 sm:w-11" />
             <span className={onHome ? "text-[21px] font-extrabold tracking-[-0.06em] text-white sm:text-2xl" : "text-[21px] font-extrabold tracking-[-0.06em] text-[#0B1D34] sm:text-2xl"}>Vision <span className="bg-gradient-to-r from-[#47D4D7] to-[#B48BEE] bg-clip-text text-transparent">AI</span></span>
           </button>
 
@@ -91,14 +90,14 @@ function NavbarImpl() {
 
             {/* Mobile */}
             <div className="flex items-center gap-2 md:hidden">
-              <NbButton variant="studio" size="sm" className="hidden sm:inline-flex" onClick={() => router.push(cta.href)}>
+              <NbButton variant="studio" size="sm" className="hidden" onClick={() => router.push(cta.href)}>
                 {cta.label}
               </NbButton>
               <button
                 type="button"
                 onClick={() => setOpen((v) => !v)}
                 className={onHome ? "rounded-2xl border border-white/25 bg-white/10 px-4 py-3 text-sm font-semibold text-white" : "rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-[#12253D] shadow-sm"}
-                style={{ borderColor: "rgba(2,6,23,0.12)" }}
+                
               >
                 {open ? "Close" : "Menu"}
               </button>
