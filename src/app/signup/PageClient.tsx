@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { NbButton } from "@/components/ui/NbButton";
 
@@ -63,10 +63,10 @@ export default function SignupPage() {
   const initial = (sp.get("plan") as Plan) || "trial";
   const [plan, setPlan] = useState<Plan>(["trial","pro","studio"].includes(initial) ? initial : "trial");
 
-  const planMeta = useMemo(() => PLANS.find(p => p.id === plan)!, [plan]);
-  const showPayment = planMeta.paid;
 
-  const ctaText = plan === "trial" ? "Start 3-day trial" : plan === "pro" ? "Start Pro" : "Start Studio";
+
+
+
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
@@ -111,34 +111,13 @@ export default function SignupPage() {
           >
             <div className="text-lg font-semibold text-[#020617]">Account</div>
 
-            <div className="mt-5 grid gap-3">
-              <input className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="Email" />
-              <input type="password" className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="Password" />
-              <input type="password" className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="Confirm password" />
+            <div role="status" className="mt-5 rounded-2xl border border-black/10 bg-white/90 p-5 text-sm leading-relaxed text-slate-700">
+              Account registration and secure checkout are not yet available. No payment information is collected on this page.
+              Please check back when account creation is enabled.
             </div>
-
-            {showPayment && (
-              <div className="mt-7">
-                <div className="text-lg font-semibold text-[#020617]">Payment</div>
-                <div className="mt-4 grid gap-3">
-                  <input className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="Card number" />
-                  <div className="grid grid-cols-2 gap-3">
-                    <input className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="Expiry" />
-                    <input className="w-full rounded-2xl border bg-white/90 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[rgba(0,242,255,0.35)]" style={{ borderColor: "rgba(2,6,23,0.10)" }} placeholder="CVC" />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="mt-7 text-sm text-black/55">
-              {plan === "trial"
-                ? "You will be charged $29/mo after 3 days unless you cancel."
-                : "Cancel anytime."}
-            </div>
-
             <div className="mt-5">
-              <NbButton variant="primary" size="lg" fullWidth onClick={() => {}}>
-                {ctaText}
+              <NbButton variant="primary" size="lg" fullWidth disabled>
+                Registration coming soon
               </NbButton>
             </div>
           </div>
