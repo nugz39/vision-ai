@@ -22,7 +22,7 @@ export default function BluePurpleButton({ className, loading, disabled, childre
         className
       )}
       style={{
-        background: "linear-gradient(90deg, #00F2FF, #7AF63C, #CB2FFF)",
+        background: "linear-gradient(110deg,#087EAC,#2469B7,#7140B6)",
       }}
     >
       {loading ? "Generating…" : children}
